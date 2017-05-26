@@ -889,6 +889,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.ui.Table & CubaEnhan
                 throw new IllegalArgumentException("The new datasource must correspond to the same MetaClass");
             }
 
+            if (fieldDatasources != null) {
+                fieldDatasources.clear();
+            }
+
             if (collectionDsListenersWrapper != null) {
                 collectionDsListenersWrapper.unbind(this.datasource);
                 if (containerDatasource != null) {
