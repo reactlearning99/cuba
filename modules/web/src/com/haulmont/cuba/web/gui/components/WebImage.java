@@ -21,24 +21,27 @@ import com.haulmont.bali.util.Preconditions;
 import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
+import com.haulmont.chile.core.model.utils.InstanceUtils;
 import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.MetadataTools;
+import com.haulmont.cuba.gui.GuiDevelopmentException;
 import com.haulmont.cuba.gui.components.Image;
 import com.haulmont.cuba.gui.components.compatibility.ComponentValueListenerWrapper;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.ValueListener;
+import com.haulmont.cuba.gui.data.impl.WeakItemChangeListener;
+import com.haulmont.cuba.gui.data.impl.WeakItemPropertyChangeListener;
 import com.haulmont.cuba.gui.export.ByteArrayDataProvider;
 import com.haulmont.cuba.web.gui.components.imageresources.*;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.util.SharedUtil;
 
 import java.io.InputStream;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implements Image {
-
     protected ImageResource value;
 
     protected boolean editable;
@@ -48,6 +51,10 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
     protected MetaProperty metaProperty;
 
     protected Datasource.ItemPropertyChangeListener itemPropertyChangeListener;
+    protected WeakItemPropertyChangeListener weakItemPropertyChangeListener;
+
+    protected Datasource.ItemChangeListener itemChangeListener;
+    protected WeakItemChangeListener weakItemChangeListener;
 
     protected static final Map<Class<? extends ImageResource>, Class<? extends ImageResource>> resourcesClasses;
 
@@ -100,8 +107,12 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
             component.setSource(null);
 
             //noinspection unchecked
-            this.datasource.removeItemPropertyChangeListener(itemPropertyChangeListener);
-            itemPropertyChangeListener = null;
+            this.datasource.removeItemPropertyChangeListener(weakItemPropertyChangeListener);
+            weakItemPropertyChangeListener = null;
+
+            //noinspection unchecked
+            this.datasource.removeItemChangeListener(weakItemChangeListener);
+            weakItemChangeListener = null;
 
             this.datasource = null;
         }
@@ -110,51 +121,55 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
             //noinspection unchecked
             this.datasource = datasource;
 
-            final MetaClass metaClass = datasource.getMetaClass();
-            resolveMetaPropertyPath(metaClass, property);
+            resolveMetaPropertyPath(datasource.getMetaClass(), property);
 
-            component.setSource(createSuitableResource(datasource, property));
+            updateComponent();
 
-            if (metaProperty.isReadOnly()) {
-                setEditable(false);
-            }
-
-            itemPropertyChangeListener = e ->
-                    component.setSource(createSuitableResource(datasource, property));
-
+            itemPropertyChangeListener = e -> {
+                if (e.getProperty().equals(metaPropertyPath.toString())) {
+                    updateComponent();
+                }
+            };
+            weakItemPropertyChangeListener = new WeakItemPropertyChangeListener(datasource, itemPropertyChangeListener);
             //noinspection unchecked
-            this.datasource.addItemPropertyChangeListener(itemPropertyChangeListener);
+            this.datasource.addItemPropertyChangeListener(weakItemPropertyChangeListener);
+
+            itemChangeListener = e ->
+                    updateComponent();
+
+            weakItemChangeListener = new WeakItemChangeListener(datasource, itemChangeListener);
+            //noinspection unchecked
+            datasource.addItemChangeListener(weakItemChangeListener);
         }
     }
 
-    protected Resource createSuitableResource(Datasource datasource, String property) {
-        Entity item = datasource.getItem();
-        if (item == null) {
+    protected void updateComponent() {
+        Object propertyValue = InstanceUtils.getValueEx(datasource.getItem(), metaPropertyPath.getPath());
+        ImageResource resource = createImageResource(propertyValue);
+
+        updateValue(resource);
+    }
+
+    protected ImageResource createImageResource(final Object resourceObject) {
+        if (resourceObject == null) {
             return null;
         }
 
-        Object propertyValue = item.getValueEx(property);
-
-        if (propertyValue instanceof String) {
-            ThemeImageResource resource = createResource(ThemeImageResource.class);
-            resource.setPath((String) propertyValue);
-            return ((WebThemeImageResource) resource).getResource();
+        if (resourceObject instanceof FileDescriptor) {
+            FileDescriptorImageResource imageResource = createResource(FileDescriptorImageResource.class);
+            imageResource.setFileDescriptor((FileDescriptor) resourceObject);
+            return imageResource;
         }
 
-        if (propertyValue instanceof FileDescriptor) {
-            FileDescriptorImageResource resource = createResource(FileDescriptorImageResource.class);
-            resource.setFileDescriptor((FileDescriptor) propertyValue);
-            return ((WebFileDescriptorImageResource) resource).getResource();
+        if (resourceObject instanceof byte[]) {
+            StreamImageResource imageResource = createResource(StreamImageResource.class);
+            Supplier<InputStream> streamSupplier = () ->
+                    new ByteArrayDataProvider((byte[]) resourceObject).provide();
+            imageResource.setStreamSupplier(streamSupplier);
+            return imageResource;
         }
 
-        if (propertyValue instanceof byte[]) {
-            StreamImageResource resource = createResource(StreamImageResource.class);
-            Supplier<InputStream> streamSupplier = () -> new ByteArrayDataProvider((byte[]) propertyValue).provide();
-            resource.setStreamSupplier(streamSupplier);
-            return ((WebStreamImageResource) resource).getResource();
-        }
-
-        return null;
+        throw new GuiDevelopmentException("The Image component supports only FileDescriptor and byte[] datasource property value binding", getFrame().getId());
     }
 
     protected void resolveMetaPropertyPath(MetaClass metaClass, String property) {
@@ -178,17 +193,30 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
 
     @Override
     public void setValue(Object value) {
-        if (value == null) {
-            this.value = null;
+        if (SharedUtil.equals(this.value, value)) {
             return;
         }
 
-        if (!(value instanceof WebAbstractImageResource)) {
-            throw new IllegalArgumentException("setValue() accepts only ImageResource");
+        if (!(value instanceof ImageResource) && value != null) {
+            throw new IllegalArgumentException("WebImage#setValue accepts only ImageResource or null as argument");
         }
 
-        Resource resource = ((WebAbstractImageResource) value).getResource();
-        component.setSource(resource);
+        updateValue(value);
+    }
+
+    protected void updateValue(Object value) {
+        Object oldValue = this.value;
+        this.value = ((ImageResource) value);
+
+        Resource vResource = value == null ? null : ((WebAbstractImageResource) value).getResource();
+        component.setSource(vResource);
+
+        fireValueChange(oldValue, value);
+    }
+
+    protected void fireValueChange(Object oldValue, Object newValue) {
+        getEventRouter().fireEvent(ValueChangeListener.class, ValueChangeListener::valueChanged,
+                new ValueChangeEvent(this, oldValue, newValue));
     }
 
     @Override
@@ -212,11 +240,13 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
         getEventRouter().removeListener(ValueChangeListener.class, listener);
     }
 
+    // just stub
     @Override
     public boolean isEditable() {
         return editable;
     }
 
+    // just stub
     @Override
     public void setEditable(boolean editable) {
         this.editable = editable;

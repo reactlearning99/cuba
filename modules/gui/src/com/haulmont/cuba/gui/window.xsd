@@ -1511,13 +1511,6 @@
     <xs:complexType name="urlImageResource">
         <xs:attribute name="url" type="xs:string"/>
     </xs:complexType>
-
-    <xs:simpleType name="stringResourceType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="THEME"/>
-            <xs:enumeration value="CLASSPATH"/>
-        </xs:restriction>
-    </xs:simpleType>
     
     <xs:complexType name="imageComponent">
         <xs:complexContent>
@@ -1528,8 +1521,6 @@
                     <xs:element name="classpath" type="classpathImageResource"/>
                     <xs:element name="url" type="urlImageResource"/>
                 </xs:choice>
-
-                <xs:attribute name="stringResourceType" type="stringResourceType"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
