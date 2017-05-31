@@ -34,8 +34,12 @@ public class WebFileDescriptorImageResource extends WebImage.WebAbstractImageRes
     protected FileDescriptor fileDescriptor;
 
     @Override
-    public void setFileDescriptor(FileDescriptor fileDescriptor) {
+    public Image.FileDescriptorImageResource setFileDescriptor(FileDescriptor fileDescriptor) {
         this.fileDescriptor = fileDescriptor;
+
+        fireResourceUpdateEvent();
+
+        return this;
     }
 
     @Override

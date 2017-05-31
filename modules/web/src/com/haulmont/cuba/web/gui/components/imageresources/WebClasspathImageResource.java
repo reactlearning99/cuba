@@ -32,8 +32,12 @@ public class WebClasspathImageResource extends WebImage.WebAbstractImageResource
     protected String path;
 
     @Override
-    public void setPath(String path) {
+    public Image.ClasspathImageResource setPath(String path) {
         this.path = path;
+
+        fireResourceUpdateEvent();
+
+        return this;
     }
 
     @Override

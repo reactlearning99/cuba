@@ -30,8 +30,12 @@ public class WebThemeImageResource extends WebImage.WebAbstractImageResource imp
     protected String path;
 
     @Override
-    public void setPath(String path) {
+    public Image.ThemeImageResource setPath(String path) {
         this.path = path;
+
+        fireResourceUpdateEvent();
+
+        return this;
     }
 
     @Override

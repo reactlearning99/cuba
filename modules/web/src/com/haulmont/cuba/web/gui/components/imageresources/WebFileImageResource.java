@@ -31,8 +31,12 @@ public class WebFileImageResource extends WebImage.WebAbstractImageResource impl
     protected File file;
 
     @Override
-    public void setFile(File file) {
+    public Image.FileImageResource setFile(File file) {
         this.file = file;
+
+        fireResourceUpdateEvent();
+
+        return this;
     }
 
     @Override

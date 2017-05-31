@@ -16,15 +16,53 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.chile.core.model.MetaPropertyPath;
 import com.haulmont.cuba.core.entity.FileDescriptor;
+import com.haulmont.cuba.gui.data.Datasource;
 
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.EventObject;
 import java.util.function.Supplier;
 
-public interface Image extends DatasourceComponent, Component.HasCaption {
+public interface Image extends Component, Component.HasCaption {
     String NAME = "image";
+
+    /**
+     * @return {@link ImageResource} instance
+     */
+    <T extends ImageResource> T getSource();
+
+    /**
+     * Sets the given {@link ImageResource} to the component.
+     *
+     * @param resource ImageResource instance
+     */
+    void setSource(ImageResource resource);
+
+    /**
+     * Creates the image resource with the given <code>type</code> and sets it to the component.
+     *
+     * @param type image resource class to be created
+     * @return created image resource instance
+     */
+    <T extends ImageResource> T setSource(Class<T> type);
+
+    /**
+     * Set datasource and its property.
+     */
+    void setDatasource(Datasource datasource, String property);
+
+    /**
+     * @return datasource instance
+     */
+    Datasource getDatasource();
+
+    /**
+     * @return datasource property path
+     */
+    MetaPropertyPath getMetaPropertyPath();
 
     /**
      * Creates image resource implementation by its type.
@@ -44,17 +82,16 @@ public interface Image extends DatasourceComponent, Component.HasCaption {
      * A resource which represents an image which can be loaded from the given <code>URL</code>.
      */
     interface UrlImageResource extends ImageResource {
-        void setUrl(URL url);
+        UrlImageResource setUrl(URL url);
 
         URL getUrl();
     }
-
 
     /**
      * A resource which represents an image which stores in the filesystem as the given <code>File</code>.
      */
     interface FileImageResource extends ImageResource {
-        void setFile(File file);
+        FileImageResource setFile(File file);
 
         File getFile();
     }
@@ -63,7 +100,7 @@ public interface Image extends DatasourceComponent, Component.HasCaption {
      * A resource which represents a theme image, e.g., <code>VAADIN/themes/yourtheme/path</code>
      */
     interface ThemeImageResource extends ImageResource {
-        void setPath(String path);
+        ThemeImageResource setPath(String path);
 
         String getPath();
     }
@@ -73,7 +110,7 @@ public interface Image extends DatasourceComponent, Component.HasCaption {
      * by the given FileDescriptor.
      */
     interface FileDescriptorImageResource extends ImageResource {
-        void setFileDescriptor(FileDescriptor fileDescriptor);
+        FileDescriptorImageResource setFileDescriptor(FileDescriptor fileDescriptor);
 
         FileDescriptor getFileDescriptor();
     }
@@ -82,7 +119,7 @@ public interface Image extends DatasourceComponent, Component.HasCaption {
      * A resource which represents an image located in classpath with the given <code>path</code>.
      */
     interface ClasspathImageResource extends ImageResource {
-        void setPath(String path);
+        ClasspathImageResource setPath(String path);
 
         String getPath();
     }
@@ -91,8 +128,54 @@ public interface Image extends DatasourceComponent, Component.HasCaption {
      * A resource which is stream image representation.
      */
     interface StreamImageResource extends ImageResource {
-        void setStreamSupplier(Supplier<InputStream> streamSupplier);
+        StreamImageResource setStreamSupplier(Supplier<InputStream> streamSupplier);
 
         Supplier<InputStream> getStreamSupplier();
+    }
+
+    /**
+     * Adds a listener that will be notified when a image source is changed.
+     */
+    void addSourceChangeListener(SourceChangeListener listener);
+
+    /**
+     * Removes a listener that will be notified when a image source is changed.
+     */
+    void removeSourceChangeListener(SourceChangeListener listener);
+
+    /**
+     * Listener that will be notified when a image source is changed.
+     */
+    @FunctionalInterface
+    interface SourceChangeListener {
+        void sourceChanged(SourceChangeEvent event);
+    }
+
+    /**
+     * SourceChangeEvent is fired when a image source is changed.
+     */
+    class SourceChangeEvent extends EventObject {
+        protected ImageResource oldSource;
+        protected ImageResource newSource;
+
+        public SourceChangeEvent(Object source, ImageResource oldSource, ImageResource newSource) {
+            super(source);
+
+            this.oldSource = oldSource;
+            this.newSource = newSource;
+        }
+
+        @Override
+        public Image getSource() {
+            return (Image) super.getSource();
+        }
+
+        public ImageResource getOldSource() {
+            return oldSource;
+        }
+
+        public ImageResource getNewSource() {
+            return newSource;
+        }
     }
 }

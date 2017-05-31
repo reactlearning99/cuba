@@ -17,9 +17,6 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.google.common.collect.ImmutableMap;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.chile.core.model.MetaPropertyPath;
 import com.haulmont.chile.core.model.utils.InstanceUtils;
 import com.haulmont.cuba.core.entity.FileDescriptor;
@@ -27,9 +24,7 @@ import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.MetadataTools;
 import com.haulmont.cuba.gui.GuiDevelopmentException;
 import com.haulmont.cuba.gui.components.Image;
-import com.haulmont.cuba.gui.components.compatibility.ComponentValueListenerWrapper;
 import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.ValueListener;
 import com.haulmont.cuba.gui.data.impl.WeakItemChangeListener;
 import com.haulmont.cuba.gui.data.impl.WeakItemPropertyChangeListener;
 import com.haulmont.cuba.gui.export.ByteArrayDataProvider;
@@ -48,13 +43,14 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
 
     protected Datasource datasource;
     protected MetaPropertyPath metaPropertyPath;
-    protected MetaProperty metaProperty;
 
     protected Datasource.ItemPropertyChangeListener itemPropertyChangeListener;
     protected WeakItemPropertyChangeListener weakItemPropertyChangeListener;
 
     protected Datasource.ItemChangeListener itemChangeListener;
     protected WeakItemChangeListener weakItemChangeListener;
+
+    protected Runnable imageResourceUpdateHandler;
 
     protected static final Map<Class<? extends ImageResource>, Class<? extends ImageResource>> resourcesClasses;
 
@@ -74,16 +70,16 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
 
     public WebImage() {
         component = new com.vaadin.ui.Image();
+
+        imageResourceUpdateHandler = () -> {
+            Resource vRes = this.value == null ? null : ((WebAbstractImageResource) this.value).getResource();
+            component.setSource(vRes);
+        };
     }
 
     @Override
     public Datasource getDatasource() {
         return datasource;
-    }
-
-    @Override
-    public MetaProperty getMetaProperty() {
-        return metaPropertyPath.getMetaProperty();
     }
 
     @Override
@@ -101,7 +97,6 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
             return;
 
         if (this.datasource != null) {
-            metaProperty = null;
             metaPropertyPath = null;
 
             component.setSource(null);
@@ -121,7 +116,8 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
             //noinspection unchecked
             this.datasource = datasource;
 
-            resolveMetaPropertyPath(datasource.getMetaClass(), property);
+            metaPropertyPath = AppBeans.get(MetadataTools.class)
+                    .resolveMetaPropertyPathNN(datasource.getMetaClass(), property);
 
             updateComponent();
 
@@ -172,84 +168,46 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
         throw new GuiDevelopmentException("The Image component supports only FileDescriptor and byte[] datasource property value binding", getFrame().getId());
     }
 
-    protected void resolveMetaPropertyPath(MetaClass metaClass, String property) {
-        metaPropertyPath = getResolvedMetaPropertyPath(metaClass, property);
-        this.metaProperty = metaPropertyPath.getMetaProperty();
-    }
-
-    protected MetaPropertyPath getResolvedMetaPropertyPath(MetaClass metaClass, String property) {
-        MetaPropertyPath metaPropertyPath = AppBeans.get(MetadataTools.NAME, MetadataTools.class)
-                .resolveMetaPropertyPath(metaClass, property);
-        Preconditions.checkNotNullArgument(metaPropertyPath, "Could not resolve property path '%s' in '%s'", property, metaClass);
-
-        return metaPropertyPath;
-    }
-
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> T getValue() {
+    public <T extends ImageResource> T getSource() {
+        //noinspection unchecked
         return (T) value;
     }
 
     @Override
-    public void setValue(Object value) {
-        if (SharedUtil.equals(this.value, value)) {
+    public void setSource(ImageResource resource) {
+        if (SharedUtil.equals(this.value, resource)) {
             return;
         }
-
-        if (!(value instanceof ImageResource) && value != null) {
-            throw new IllegalArgumentException("WebImage#setValue accepts only ImageResource or null as argument");
-        }
-
-        updateValue(value);
+        updateValue(resource);
     }
 
-    protected void updateValue(Object value) {
-        Object oldValue = this.value;
-        this.value = ((ImageResource) value);
+    @Override
+    public <T extends ImageResource> T setSource(Class<T> type) {
+        T resource = createResource(type);
+
+        updateValue(resource);
+
+        return resource;
+    }
+
+    protected void updateValue(ImageResource value) {
+        ImageResource oldValue = this.value;
+        if (oldValue != null) {
+            ((WebAbstractImageResource) oldValue).setResourceUpdatedHandler(null);
+        }
+
+        this.value = value;
 
         Resource vResource = value == null ? null : ((WebAbstractImageResource) value).getResource();
         component.setSource(vResource);
 
-        fireValueChange(oldValue, value);
-    }
+        if (value != null) {
+            ((WebAbstractImageResource) value).setResourceUpdatedHandler(imageResourceUpdateHandler);
+        }
 
-    protected void fireValueChange(Object oldValue, Object newValue) {
-        getEventRouter().fireEvent(ValueChangeListener.class, ValueChangeListener::valueChanged,
-                new ValueChangeEvent(this, oldValue, newValue));
-    }
-
-    @Override
-    public void addListener(ValueListener listener) {
-        addValueChangeListener(new ComponentValueListenerWrapper(listener));
-
-    }
-
-    @Override
-    public void removeListener(ValueListener listener) {
-        removeValueChangeListener(new ComponentValueListenerWrapper(listener));
-    }
-
-    @Override
-    public void addValueChangeListener(ValueChangeListener listener) {
-        getEventRouter().addListener(ValueChangeListener.class, listener);
-    }
-
-    @Override
-    public void removeValueChangeListener(ValueChangeListener listener) {
-        getEventRouter().removeListener(ValueChangeListener.class, listener);
-    }
-
-    // just stub
-    @Override
-    public boolean isEditable() {
-        return editable;
-    }
-
-    // just stub
-    @Override
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+        getEventRouter().fireEvent(SourceChangeListener.class, SourceChangeListener::sourceChanged,
+                new SourceChangeEvent(this, oldValue, this.value));
     }
 
     @Override
@@ -267,8 +225,19 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
         }
     }
 
+    @Override
+    public void addSourceChangeListener(SourceChangeListener listener) {
+        getEventRouter().addListener(SourceChangeListener.class, listener);
+    }
+
+    @Override
+    public void removeSourceChangeListener(SourceChangeListener listener) {
+        getEventRouter().removeListener(SourceChangeListener.class, listener);
+    }
+
     public abstract static class WebAbstractImageResource implements WebImageResource {
         protected Resource resource;
+        protected Runnable resourceUpdateHandler;
 
         @Override
         public Resource getResource() {
@@ -276,6 +245,18 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
                 createResource();
             }
             return resource;
+        }
+
+        protected void fireResourceUpdateEvent() {
+            resource = null;
+
+            if (resourceUpdateHandler != null) {
+                resourceUpdateHandler.run();
+            }
+        }
+
+        protected void setResourceUpdatedHandler(Runnable resourceUpdated) {
+            this.resourceUpdateHandler = resourceUpdated;
         }
 
         protected abstract void createResource();

@@ -18,6 +18,7 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.GuiDevelopmentException;
 import com.haulmont.cuba.gui.components.Image;
+import com.haulmont.cuba.gui.data.Datasource;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 
@@ -25,7 +26,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ImageLoader extends AbstractDatasourceComponentLoader<Image> {
+public class ImageLoader extends AbstractComponentLoader<Image> {
 
     @Override
     public void createComponent() {
@@ -43,7 +44,7 @@ public class ImageLoader extends AbstractDatasourceComponentLoader<Image> {
         loadImageResource(resultComponent, element);
     }
 
-    private void loadImageResource(Image resultComponent, Element element) {
+    protected void loadImageResource(Image resultComponent, Element element) {
         if (loadFileImageResource(resultComponent, element)) return;
 
         if (loadThemeImageResource(resultComponent, element)) return;
@@ -53,7 +54,7 @@ public class ImageLoader extends AbstractDatasourceComponentLoader<Image> {
         loadUrlImageResource(resultComponent, element);
     }
 
-    private void loadUrlImageResource(Image resultComponent, Element element) {
+    protected void loadUrlImageResource(Image resultComponent, Element element) {
         Element urlResource = element.element("url");
         if (urlResource == null)
             return;
@@ -66,14 +67,14 @@ public class ImageLoader extends AbstractDatasourceComponentLoader<Image> {
         Image.UrlImageResource resource = resultComponent.createResource(Image.UrlImageResource.class);
         try {
             resource.setUrl(new URL(url));
-            resultComponent.setValue(resource);
+            resultComponent.setSource(resource);
         } catch (MalformedURLException e) {
             String msg = String.format("An error occurred while creating UrlImageResource with the given url: %s", url);
             throw new RuntimeException(msg, e);
         }
     }
 
-    private boolean loadClasspathImageResource(Image resultComponent, Element element) {
+    protected boolean loadClasspathImageResource(Image resultComponent, Element element) {
         Element classpathResource = element.element("classpath");
         if (classpathResource == null)
             return false;
@@ -85,12 +86,12 @@ public class ImageLoader extends AbstractDatasourceComponentLoader<Image> {
 
         Image.ClasspathImageResource resource = resultComponent.createResource(Image.ClasspathImageResource.class);
         resource.setPath(classpathPath);
-        resultComponent.setValue(resource);
+        resultComponent.setSource(resource);
 
         return true;
     }
 
-    private boolean loadThemeImageResource(Image resultComponent, Element element) {
+    protected boolean loadThemeImageResource(Image resultComponent, Element element) {
         Element themeResource = element.element("theme");
         if (themeResource == null)
             return false;
@@ -102,12 +103,12 @@ public class ImageLoader extends AbstractDatasourceComponentLoader<Image> {
 
         Image.ThemeImageResource resource = resultComponent.createResource(Image.ThemeImageResource.class);
         resource.setPath(themePath);
-        resultComponent.setValue(resource);
+        resultComponent.setSource(resource);
 
         return true;
     }
 
-    private boolean loadFileImageResource(Image resultComponent, Element element) {
+    protected boolean loadFileImageResource(Image resultComponent, Element element) {
         Element fileResource = element.element("file");
         if (fileResource == null)
             return false;
@@ -125,8 +126,28 @@ public class ImageLoader extends AbstractDatasourceComponentLoader<Image> {
 
         Image.FileImageResource resource = resultComponent.createResource(Image.FileImageResource.class);
         resource.setFile(file);
-        resultComponent.setValue(resource);
+        resultComponent.setSource(resource);
 
         return true;
+    }
+
+    protected void loadDatasource(Image component, Element element) {
+        final String datasource = element.attributeValue("datasource");
+        if (!StringUtils.isEmpty(datasource)) {
+            Datasource ds = context.getDsContext().get(datasource);
+            if (ds == null) {
+                throw new GuiDevelopmentException(String.format("Datasource '%s' is not defined", datasource),
+                        getContext().getFullFrameId(), "Component ID", component.getId());
+            }
+            String property = element.attributeValue("property");
+            if (StringUtils.isEmpty(property)) {
+                throw new GuiDevelopmentException(
+                        String.format("Can't set datasource '%s' for component '%s' because 'property' " +
+                                "attribute is not defined", datasource, component.getId()),
+                        context.getFullFrameId());
+            }
+
+            component.setDatasource(ds, property);
+        }
     }
 }

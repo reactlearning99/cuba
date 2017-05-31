@@ -25,15 +25,19 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
-public class WebStreamImageResource extends WebImage.WebAbstractImageResource implements Image.StreamImageResource, WebImageResource {
+public class WebStreamImageResource extends WebImage.WebAbstractImageResource implements WebImageResource, Image.StreamImageResource {
 
     private final Logger log = LoggerFactory.getLogger(WebStreamImageResource.class);
 
     protected Supplier<InputStream> streamSupplier;
 
     @Override
-    public void setStreamSupplier(Supplier<InputStream> streamSupplier) {
+    public Image.StreamImageResource setStreamSupplier(Supplier<InputStream> streamSupplier) {
         this.streamSupplier = streamSupplier;
+
+        fireResourceUpdateEvent();
+
+        return this;
     }
 
     @Override

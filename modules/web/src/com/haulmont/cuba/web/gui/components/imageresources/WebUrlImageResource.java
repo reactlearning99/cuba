@@ -31,8 +31,12 @@ public class WebUrlImageResource extends WebImage.WebAbstractImageResource imple
     protected URL url;
 
     @Override
-    public void setUrl(URL url) {
+    public Image.UrlImageResource setUrl(URL url) {
         this.url = url;
+
+        fireResourceUpdateEvent();
+
+        return this;
     }
 
     @Override
