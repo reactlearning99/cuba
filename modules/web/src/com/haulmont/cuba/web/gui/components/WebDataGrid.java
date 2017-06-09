@@ -1357,6 +1357,21 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
     }
 
     @Override
+    public List<SortOrder> getSortOrder() {
+        return convertToDataGridSortOrder(component.getSortOrder());
+    }
+
+    protected List<SortOrder> convertToDataGridSortOrder(List<com.vaadin.data.sort.SortOrder> gridSortOrder) {
+        List<SortOrder> sortOrders = new ArrayList<>();
+        for (com.vaadin.data.sort.SortOrder sortOrder : gridSortOrder) {
+            Column column = getColumnByPropertyId(sortOrder.getPropertyId());
+            sortOrders.add(new SortOrder(column != null ? column.getId() : null,
+                    convertToDataGridSortDirection(sortOrder.getDirection())));
+        }
+        return sortOrders;
+    }
+
+    @Override
     public void addAction(Action action) {
         int index = findActionById(actionList, action.getId());
         if (index < 0) {
@@ -2154,12 +2169,7 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
         if (sortListener == null) {
             sortListener = (com.vaadin.event.SortEvent.SortListener) e -> {
                 if (e.isUserOriginated()) {
-                    List<SortOrder> sortOrders = new ArrayList<>();
-                    for (com.vaadin.data.sort.SortOrder sortOrder : e.getSortOrder()) {
-                        Column column = getColumnByPropertyId(sortOrder.getPropertyId());
-                        sortOrders.add(new SortOrder(column != null ? column.getId() : null,
-                                convertToDataGridSortDirection(sortOrder.getDirection())));
-                    }
+                    List<SortOrder> sortOrders = convertToDataGridSortOrder(e.getSortOrder());
 
                     SortEvent event = new SortEvent(WebDataGrid.this, sortOrders);
                     getEventRouter().fireEvent(SortListener.class, SortListener::sorted, event);
