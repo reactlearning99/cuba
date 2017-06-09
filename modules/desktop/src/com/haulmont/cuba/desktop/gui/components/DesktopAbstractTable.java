@@ -1318,6 +1318,13 @@ public abstract class DesktopAbstractTable<C extends JXTable, E extends Entity>
         }
     }
 
+    @Nullable
+    @Override
+    public SortInfo getSortInfo() {
+        // TODO: gg,  
+        return null;
+    }
+
     @Override
     public void selectAll() {
         if (isMultiSelect()) {
