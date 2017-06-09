@@ -29,6 +29,7 @@ import com.haulmont.cuba.gui.data.impl.WeakItemChangeListener;
 import com.haulmont.cuba.gui.data.impl.WeakItemPropertyChangeListener;
 import com.haulmont.cuba.gui.export.ByteArrayDataProvider;
 import com.haulmont.cuba.web.gui.components.imageresources.*;
+import com.haulmont.cuba.web.toolkit.ui.CubaImage;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -36,13 +37,18 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implements Image {
+public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
+    protected static final String STYLENAME = "c-image";
+    public static final String IMAGE_FIT = "object-fit-";
+
     protected ImageResource value;
 
     protected boolean editable;
 
     protected Datasource datasource;
     protected MetaPropertyPath metaPropertyPath;
+
+    protected ScaleMode scaleMode = ScaleMode.NONE;
 
     protected Datasource.ItemPropertyChangeListener itemPropertyChangeListener;
     protected WeakItemPropertyChangeListener weakItemPropertyChangeListener;
@@ -69,7 +75,10 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
     }
 
     public WebImage() {
-        component = new com.vaadin.ui.Image();
+        component = new CubaImage();
+        component.setPrimaryStyleName(STYLENAME);
+
+        setScaleMode(this.scaleMode);
 
         imageResourceUpdateHandler = () -> {
             Resource vRes = this.value == null ? null : ((WebAbstractImageResource) this.value).getResource();
@@ -233,6 +242,32 @@ public class WebImage extends WebAbstractComponent<com.vaadin.ui.Image> implemen
     @Override
     public void removeSourceChangeListener(SourceChangeListener listener) {
         getEventRouter().removeListener(SourceChangeListener.class, listener);
+    }
+
+    @Override
+    public ScaleMode getScaleMode() {
+        return this.scaleMode;
+    }
+
+    @Override
+    public void setScaleMode(ScaleMode scaleMode) {
+        component.removeStyleName(getStyleNameByScaleMode(this.scaleMode));
+
+        this.scaleMode = scaleMode;
+
+        String mode = getStyleNameByScaleMode(this.scaleMode);
+
+        component.addStyleName(mode);
+
+        component.setScaleMode(mode);
+    }
+
+    protected String getStyleNameByScaleMode(ScaleMode scaleMode) {
+        if (scaleMode == null) {
+            return IMAGE_FIT + ScaleMode.NONE.name().toLowerCase();
+        }
+
+        return IMAGE_FIT + scaleMode.name().toLowerCase();
     }
 
     public abstract static class WebAbstractImageResource implements WebImageResource {

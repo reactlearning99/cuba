@@ -73,6 +73,18 @@ public interface Image extends Component, Component.HasCaption {
     <T extends ImageResource> T createResource(Class<T> type);
 
     /**
+     * @return image scale mode
+     */
+    ScaleMode getScaleMode();
+
+    /**
+     * Applies the given scale mode to the image.
+     *
+     * @param scaleMode scale mode
+     */
+    void setScaleMode(ScaleMode scaleMode);
+
+    /**
      * Marker interface to indicate that the implementing class can be used as a image resource.
      */
     interface ImageResource {
@@ -177,5 +189,24 @@ public interface Image extends Component, Component.HasCaption {
         public ImageResource getNewSource() {
             return newSource;
         }
+    }
+
+    /**
+     * Defines image scale mode
+     */
+    enum ScaleMode {
+        /**
+         * The image will be stretched according to the size of the component.
+         */
+        FILL,
+        /**
+         * The image will be compressed or stretched to the minimum measurement of the component while preserving the
+         * proportions.
+         */
+        CONTAIN,
+        /**
+         * The image will have a real size.
+         */
+        NONE
     }
 }
