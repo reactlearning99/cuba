@@ -1362,13 +1362,17 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
     }
 
     protected List<SortOrder> convertToDataGridSortOrder(List<com.vaadin.data.sort.SortOrder> gridSortOrder) {
-        List<SortOrder> sortOrders = new ArrayList<>();
-        for (com.vaadin.data.sort.SortOrder sortOrder : gridSortOrder) {
-            Column column = getColumnByPropertyId(sortOrder.getPropertyId());
-            sortOrders.add(new SortOrder(column != null ? column.getId() : null,
-                    convertToDataGridSortDirection(sortOrder.getDirection())));
+        if (CollectionUtils.isEmpty(gridSortOrder)) {
+            return Collections.emptyList();
         }
-        return sortOrders;
+
+        return gridSortOrder.stream()
+                .map(sortOrder -> {
+                    Column column = getColumnByPropertyId(sortOrder.getPropertyId());
+                    return new SortOrder(column != null ? column.getId() : null,
+                            convertToDataGridSortDirection(sortOrder.getDirection()));
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
