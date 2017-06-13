@@ -736,25 +736,9 @@ public class WebTokenList extends WebAbstractField<WebTokenList.CubaTokenList> i
 
         @SuppressWarnings("unchecked")
         protected void handleLookupInternal(Collection items) {
-            Entity masterEntity = null;
-            MetaProperty inverseProp = null;
-            boolean initializeMasterReference = false;
-
-            if (datasource instanceof NestedDatasource) {
-                Datasource masterDs = ((NestedDatasource) datasource).getMaster();
-                if (masterDs != null) {
-                    MetaProperty metaProperty = ((NestedDatasource) datasource).getProperty();
-                    masterEntity = masterDs.getItem();
-
-                    if (metaProperty != null) {
-                        inverseProp = metaProperty.getInverse();
-
-                        if (inverseProp != null) {
-                            initializeMasterReference = isInitializeMasterReference(inverseProp);
-                        }
-                    }
-                }
-            }
+            Entity masterEntity = getMasterEntity(datasource);
+            MetaProperty inverseProp = getInverseProperty(datasource);
+            boolean initializeMasterReference = inverseProp != null && isInitializeMasterReference(inverseProp);
 
             for (final Object item : items) {
                 if (itemChangeHandler != null) {
@@ -883,23 +867,17 @@ public class WebTokenList extends WebAbstractField<WebTokenList.CubaTokenList> i
                     itemChangeHandler.removeItem(item);
                 } else {
                     if (datasource != null) {
-                        if (datasource instanceof NestedDatasource) {
-                            // Clear reference to master entity
-                            Datasource masterDs = ((NestedDatasource) datasource).getMaster();
-                            MetaProperty metaProperty = ((NestedDatasource) datasource).getProperty();
-                            if (masterDs != null && metaProperty != null) {
-                                MetaProperty inverseProp = metaProperty.getInverse();
-                                if (inverseProp != null) {
-                                    if (isInversePropertyAssignableFromDsClass(inverseProp)) {
-                                        item.setValue(inverseProp.getName(), null);
-                                        datasource.excludeItem((Entity) item);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
+                        MetaProperty inverseProp = getInverseProperty(datasource);
+                        boolean initializeMasterReference = inverseProp != null
+                                && isInitializeMasterReference(inverseProp);
 
-                        datasource.removeItem((Entity) item);
+                        if (initializeMasterReference) {
+                            item.setValue(inverseProp.getName(), null);
+                            datasource.excludeItem((Entity) item);
+                            return;
+                        } else {
+                            datasource.removeItem((Entity) item);
+                        }
                     }
                 }
             }
@@ -950,17 +928,8 @@ public class WebTokenList extends WebAbstractField<WebTokenList.CubaTokenList> i
             itemChangeHandler.addItem(newItem);
         } else {
             if (datasource != null) {
-                Entity masterEntity = null;
-                MetaProperty inverseProp = null;
-
-                if (datasource instanceof NestedDatasource) {
-                    Datasource masterDs = ((NestedDatasource) datasource).getMaster();
-                    MetaProperty metaProperty = ((NestedDatasource) datasource).getProperty();
-                    if (masterDs != null && metaProperty != null) {
-                        masterEntity = masterDs.getItem();
-                        inverseProp = metaProperty.getInverse();
-                    }
-                }
+                Entity masterEntity = getMasterEntity(datasource);
+                MetaProperty inverseProp = getInverseProperty(datasource);
 
                 if (!datasource.containsItem(newItem.getId())) {
                     // Initialize reference to master entity
@@ -983,6 +952,26 @@ public class WebTokenList extends WebAbstractField<WebTokenList.CubaTokenList> i
                 }
             }
         }
+    }
+
+    @Nullable
+    protected Entity getMasterEntity(CollectionDatasource datasource) {
+        if (datasource instanceof NestedDatasource) {
+            Datasource masterDs = ((NestedDatasource) datasource).getMaster();
+            com.google.common.base.Preconditions.checkState(masterDs != null);
+            return masterDs.getItem();
+        }
+        return null;
+    }
+
+    @Nullable
+    protected MetaProperty getInverseProperty(CollectionDatasource datasource) {
+        if (datasource instanceof NestedDatasource) {
+            MetaProperty metaProperty = ((NestedDatasource) datasource).getProperty();
+            com.google.common.base.Preconditions.checkState(metaProperty != null);
+            return metaProperty.getInverse();
+        }
+        return null;
     }
 
     protected boolean isInitializeMasterReference(MetaProperty inverseProp) {
