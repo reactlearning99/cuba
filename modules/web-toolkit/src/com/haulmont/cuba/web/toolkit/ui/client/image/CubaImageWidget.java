@@ -16,19 +16,12 @@
 
 package com.haulmont.cuba.web.toolkit.ui.client.image;
 
+import com.google.gwt.user.client.Element;
 import com.vaadin.client.ui.VImage;
 
 public class CubaImageWidget extends VImage {
 
-    protected String scaleMode;
-
-    public void setScaleMode(String scaleMode) {
-        this.scaleMode = scaleMode;
-
-        applyScaling();
-    }
-
-    protected static native void applyScaling() /*-{
-        $wnd.objectFitImages();
+    public native void applyScaling(Element element) /*-{
+        $wnd.objectFitImages(element);
     }-*/;
 }

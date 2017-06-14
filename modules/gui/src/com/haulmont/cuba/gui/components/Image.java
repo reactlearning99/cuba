@@ -205,6 +205,11 @@ public interface Image extends Component, Component.HasCaption {
          */
         CONTAIN,
         /**
+         * The content changes size by comparing the difference between NONE and CONTAIN, in order to find the smallest
+         * concrete size of the object
+         */
+        SCALE_DOWN,
+        /**
          * The image will have a real size.
          */
         NONE

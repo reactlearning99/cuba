@@ -29,6 +29,12 @@
       object-position: bottom;
     }
 
+    &.object-fit-scale-down {
+      object-fit: scale-down;
+      font-family: 'object-fit: scale-down;';
+      object-position: bottom;
+    }
+
     &.object-fit-none {
       object-fit: none;
       font-family: 'object-fit: none;';

@@ -1511,6 +1511,15 @@
     <xs:complexType name="urlImageResource">
         <xs:attribute name="url" type="xs:string"/>
     </xs:complexType>
+
+    <xs:simpleType name="scaleMode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE"/>
+            <xs:enumeration value="FILL"/>
+            <xs:enumeration value="CONTAIN"/>
+            <xs:enumeration value="SCALE_DOWN"/>
+        </xs:restriction>
+    </xs:simpleType>
     
     <xs:complexType name="imageComponent">
         <xs:complexContent>
@@ -1521,6 +1530,7 @@
                     <xs:element name="classpath" type="classpathImageResource"/>
                     <xs:element name="url" type="urlImageResource"/>
                 </xs:choice>
+                <xs:attribute name="scaleMode" type="scaleMode"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>

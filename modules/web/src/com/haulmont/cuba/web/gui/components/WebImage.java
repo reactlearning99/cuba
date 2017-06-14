@@ -17,6 +17,7 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.google.common.collect.ImmutableMap;
+import com.haulmont.bali.util.Preconditions;
 import com.haulmont.chile.core.model.MetaPropertyPath;
 import com.haulmont.chile.core.model.utils.InstanceUtils;
 import com.haulmont.cuba.core.entity.FileDescriptor;
@@ -251,6 +252,8 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
 
     @Override
     public void setScaleMode(ScaleMode scaleMode) {
+        Preconditions.checkNotNullArgument(scaleMode);
+
         component.removeStyleName(getStyleNameByScaleMode(this.scaleMode));
 
         this.scaleMode = scaleMode;
@@ -267,7 +270,7 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
             return IMAGE_FIT + ScaleMode.NONE.name().toLowerCase();
         }
 
-        return IMAGE_FIT + scaleMode.name().toLowerCase();
+        return IMAGE_FIT + scaleMode.name().toLowerCase().replace("_", "-");
     }
 
     public abstract static class WebAbstractImageResource implements WebImageResource {

@@ -42,16 +42,25 @@ public class ImageLoader extends AbstractComponentLoader<Image> {
         loadDatasource(resultComponent, element);
 
         loadImageResource(resultComponent, element);
+
+        loadScaleMode(resultComponent, element);
     }
 
-    protected void loadImageResource(Image resultComponent, Element element) {
-        if (loadFileImageResource(resultComponent, element)) return;
+    protected void loadScaleMode(Image image, Element element) {
+        String scaleMode = element.attributeValue("scaleMode");
+        if (scaleMode != null) {
+            image.setScaleMode(Image.ScaleMode.valueOf(scaleMode));
+        }
+    }
 
-        if (loadThemeImageResource(resultComponent, element)) return;
+    protected void loadImageResource(Image image, Element element) {
+        if (loadFileImageResource(image, element)) return;
 
-        if (loadClasspathImageResource(resultComponent, element)) return;
+        if (loadThemeImageResource(image, element)) return;
 
-        loadUrlImageResource(resultComponent, element);
+        if (loadClasspathImageResource(image, element)) return;
+
+        loadUrlImageResource(image, element);
     }
 
     protected void loadUrlImageResource(Image resultComponent, Element element) {

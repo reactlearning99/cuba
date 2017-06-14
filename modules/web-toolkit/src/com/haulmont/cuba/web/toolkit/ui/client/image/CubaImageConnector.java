@@ -17,6 +17,7 @@
 package com.haulmont.cuba.web.toolkit.ui.client.image;
 
 import com.haulmont.cuba.web.toolkit.ui.CubaImage;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.image.ImageConnector;
 import com.vaadin.shared.ui.Connect;
@@ -28,12 +29,10 @@ public class CubaImageConnector extends ImageConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().setScaleMode(getState().scaleMode);
-    }
-
-    @Override
-    public CubaImageState getState() {
-        return (CubaImageState) super.getState();
+        if (stateChangeEvent.hasPropertyChanged("scaleMode") &&
+                (BrowserInfo.get().isIE() || BrowserInfo.get().isEdge())) {
+            getWidget().applyScaling(getWidget().getElement());
+        }
     }
 
     @Override
