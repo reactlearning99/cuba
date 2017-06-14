@@ -736,6 +736,7 @@ public class WebTokenList extends WebAbstractField<WebTokenList.CubaTokenList> i
 
         @SuppressWarnings("unchecked")
         protected void handleLookupInternal(Collection items) {
+            // get master entity and inverse attribute in case of nested datasource
             Entity masterEntity = getMasterEntity(datasource);
             MetaProperty inverseProp = getInverseProperty(datasource);
             boolean initializeMasterReference = inverseProp != null && isInitializeMasterReference(inverseProp);
@@ -867,6 +868,7 @@ public class WebTokenList extends WebAbstractField<WebTokenList.CubaTokenList> i
                     itemChangeHandler.removeItem(item);
                 } else {
                     if (datasource != null) {
+                        // get inverse attribute in case of nested datasource
                         MetaProperty inverseProp = getInverseProperty(datasource);
                         boolean initializeMasterReference = inverseProp != null
                                 && isInitializeMasterReference(inverseProp);
@@ -928,6 +930,7 @@ public class WebTokenList extends WebAbstractField<WebTokenList.CubaTokenList> i
             itemChangeHandler.addItem(newItem);
         } else {
             if (datasource != null) {
+                // get master entity and inverse attribute in case of nested datasource
                 Entity masterEntity = getMasterEntity(datasource);
                 MetaProperty inverseProp = getInverseProperty(datasource);
 
