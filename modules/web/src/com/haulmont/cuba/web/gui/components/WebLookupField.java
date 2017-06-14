@@ -37,7 +37,6 @@ import com.haulmont.cuba.web.gui.data.UnsubscribableDsWrapper;
 import com.haulmont.cuba.web.toolkit.ui.CubaComboBox;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.ErrorMessage;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -86,7 +85,8 @@ public class WebLookupField extends WebAbstractOptionsField<CubaComboBox> implem
             newOptionHandler.addNewOption(newItemCaption);
         });
 
-        component.addShortcutListener(new ShortcutListener("clearShortcut", KeyCode.DELETE, new int[]{ModifierKey.SHIFT}) {
+        component.addShortcutListener(new com.vaadin.event.ShortcutListener("clearShortcut",
+                KeyCode.DELETE, new int[]{ModifierKey.SHIFT}) {
             @Override
             public void handleAction(Object sender, Object target) {
                 if (!isRequired() && isEnabled() && isEditable()) {

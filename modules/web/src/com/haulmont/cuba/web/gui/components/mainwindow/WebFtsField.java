@@ -27,7 +27,6 @@ import com.haulmont.cuba.web.AppUI;
 import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
 import com.haulmont.cuba.web.gui.components.WebComponentsHelper;
 import com.haulmont.cuba.web.toolkit.ui.CubaButton;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -59,7 +58,8 @@ public class WebFtsField extends WebAbstractComponent<CssLayout> implements FtsF
             searchField.setCubaId("ftsField");
             searchField.setId(ui.getTestIdManager().reserveId("ftsField"));
         }
-        searchField.addShortcutListener(new ShortcutListener("fts", com.vaadin.event.ShortcutAction.KeyCode.ENTER, null) {
+        searchField.addShortcutListener(new com.vaadin.event.ShortcutListener("fts",
+                com.vaadin.event.ShortcutAction.KeyCode.ENTER, null) {
             @Override
             public void handleAction(Object sender, Object target) {
                 openSearchWindow();

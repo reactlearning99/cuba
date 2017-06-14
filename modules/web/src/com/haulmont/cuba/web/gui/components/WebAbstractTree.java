@@ -23,7 +23,6 @@ import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import com.haulmont.cuba.gui.data.impl.CollectionDsListenersWrapper;
 import com.haulmont.cuba.web.toolkit.ui.CubaTree;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -213,7 +212,8 @@ public abstract class WebAbstractTree<T extends CubaTree, E extends Entity>
 
         component.setSizeFull();
 
-        component.addShortcutListener(new ShortcutListener("tableEnter", com.vaadin.event.ShortcutAction.KeyCode.ENTER, null) {
+        component.addShortcutListener(new com.vaadin.event.ShortcutListener("tableEnter",
+                com.vaadin.event.ShortcutAction.KeyCode.ENTER, null) {
             @Override
             public void handleAction(Object sender, Object target) {
                 if (target == WebAbstractTree.this.component) {

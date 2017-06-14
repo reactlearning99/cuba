@@ -438,4 +438,14 @@ public abstract class DesktopAbstractBox
     @Override
     public void removeLayoutClickListener(LayoutClickListener listener) {
     }
+
+    @Override
+    public void addShortcutListener(ShortcutListener listener) {
+        // do nothing
+    }
+
+    @Override
+    public void removeShortcutListener(ShortcutListener listener) {
+        // do nothing
+    }
 }

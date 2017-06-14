@@ -231,4 +231,14 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
             layoutClickListener = null;
         }
     }
+
+    @Override
+    public void addShortcutListener(ShortcutListener listener) {
+        super.addShortcutListener(listener);
+    }
+
+    @Override
+    public void removeShortcutListener(ShortcutListener listener) {
+        super.removeShortcutListener(listener);
+    }
 }

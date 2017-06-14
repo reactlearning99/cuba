@@ -62,7 +62,6 @@ import com.haulmont.cuba.web.toolkit.ui.CubaResizableTextAreaWrapper;
 import com.haulmont.cuba.web.toolkit.ui.CubaTextArea;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Component;
@@ -674,7 +673,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.ui.Table & CubaEnhan
                     LookupSelectionChangeListener::lookupValueChanged, selectionChangeEvent);
         });
 
-        component.addShortcutListener(new ShortcutListener("tableEnter", com.vaadin.event.ShortcutAction.KeyCode.ENTER, null) {
+        component.addShortcutListener(new com.vaadin.event.ShortcutListener("tableEnter",
+                com.vaadin.event.ShortcutAction.KeyCode.ENTER, null) {
             @Override
             public void handleAction(Object sender, Object target) {
                 if (target == WebAbstractTable.this.component) {

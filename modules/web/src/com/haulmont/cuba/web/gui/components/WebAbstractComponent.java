@@ -21,7 +21,9 @@ import com.haulmont.cuba.gui.ComponentsHelper;
 import com.haulmont.cuba.gui.TestIdManager;
 import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.Frame;
+import com.haulmont.cuba.gui.components.KeyCombination;
 import com.haulmont.cuba.web.AppUI;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
@@ -31,9 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.dom4j.Element;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractComponent>
         implements Component, Component.Wrapper, Component.HasXmlDescriptor, Component.BelongToFrame, Component.HasIcon,
@@ -55,6 +55,8 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
 
     protected Alignment alignment = Alignment.TOP_LEFT;
     protected String icon;
+
+    protected Map<ShortcutListener, com.vaadin.event.ShortcutListener> shortcuts = new HashMap<>();
 
     private EventRouter eventRouter;
 
@@ -389,5 +391,25 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
                 composition.setComponentError(new UserError(errorMessage));
             }
         }
+    }
+
+    protected void addShortcutListener(ShortcutListener listener) {
+        KeyCombination keyCombination = listener.getShortcutCombination();
+        com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(null,
+                keyCombination.getKey().getCode(),
+                KeyCombination.Modifier.codes(keyCombination.getModifiers())) {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                ShortcutEvent event = new ShortcutEvent(sender, target);
+                listener.handleAction(event);
+            }
+        };
+        component.addShortcutListener(shortcut);
+        shortcuts.put(listener, shortcut);
+    }
+
+    protected void removeShortcutListener(ShortcutListener listener) {
+        component.removeShortcutListener(shortcuts.remove(listener));
     }
 }

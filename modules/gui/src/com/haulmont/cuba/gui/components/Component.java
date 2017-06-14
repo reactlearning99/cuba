@@ -351,6 +351,49 @@ public interface Component {
         }
     }
 
+    interface ShortcutNotifier {
+        void addShortcutListener(ShortcutListener listener);
+        void removeShortcutListener(ShortcutListener listener);
+    }
+
+    abstract class ShortcutListener {
+        protected KeyCombination shortcut;
+
+        public ShortcutListener(String shortcut) {
+            this(KeyCombination.create(shortcut));
+        }
+
+        public ShortcutListener(KeyCombination shortcut) {
+            this.shortcut = shortcut;
+        }
+
+        public KeyCombination getShortcutCombination() {
+            return shortcut;
+        }
+
+        public abstract void handleAction(ShortcutEvent event);
+    }
+
+    class ShortcutEvent extends EventObject {
+        private final Object target;
+
+        /**
+         * Constructs a prototypical Event.
+         *
+         * @param source The object on which the Event initially occurred.
+         * @param target
+         * @throws IllegalArgumentException if source is null.
+         */
+        public ShortcutEvent(Object source, Object target) {
+            super(source);
+            this.target = target;
+        }
+
+        public Object getTarget() {
+            return target;
+        }
+    }
+
     /**
      * Object having a border
      */

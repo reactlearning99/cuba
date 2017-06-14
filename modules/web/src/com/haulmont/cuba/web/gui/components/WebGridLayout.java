@@ -257,4 +257,14 @@ public class WebGridLayout extends WebAbstractComponent<CubaGridLayout> implemen
             layoutClickListener = null;
         }
     }
+
+    @Override
+    public void addShortcutListener(ShortcutListener listener) {
+        super.addShortcutListener(listener);
+    }
+
+    @Override
+    public void removeShortcutListener(ShortcutListener listener) {
+        super.removeShortcutListener(listener);
+    }
 }

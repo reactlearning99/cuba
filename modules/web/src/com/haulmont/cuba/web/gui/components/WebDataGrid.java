@@ -57,7 +57,6 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.*;
@@ -95,7 +94,7 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
     protected final Map<String, ColumnGenerator<E, ?>> columnGenerators = new HashMap<>();
 
     protected final List<Action> actionList = new ArrayList<>();
-    protected final ShortcutsDelegate<ShortcutListener> shortcutsDelegate;
+    protected final ShortcutsDelegate<com.vaadin.event.ShortcutListener> shortcutsDelegate;
     protected final ActionsPermissions actionsPermissions = new ActionsPermissions(this);
 
     protected CubaGridContextMenu contextMenu;
@@ -167,10 +166,11 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         showIconsForPopupMenuActions = clientConfig.getShowIconsForPopupMenuActions();
 
-        shortcutsDelegate = new ShortcutsDelegate<ShortcutListener>() {
+        shortcutsDelegate = new ShortcutsDelegate<com.vaadin.event.ShortcutListener>() {
             @Override
-            protected ShortcutListener attachShortcut(String actionId, KeyCombination keyCombination) {
-                ShortcutListener shortcut = new ShortcutListener(actionId, keyCombination.getKey().getCode(),
+            protected com.vaadin.event.ShortcutListener attachShortcut(String actionId, KeyCombination keyCombination) {
+                com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(actionId,
+                        keyCombination.getKey().getCode(),
                         KeyCombination.Modifier.codes(keyCombination.getModifiers())) {
 
                     @Override
@@ -188,7 +188,7 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
             }
 
             @Override
-            protected void detachShortcut(Action action, ShortcutListener shortcutDescriptor) {
+            protected void detachShortcut(Action action, com.vaadin.event.ShortcutListener shortcutDescriptor) {
                 component.removeShortcutListener(shortcutDescriptor);
             }
 
@@ -265,7 +265,7 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
             }
         });
 
-        component.addShortcutListener(new ShortcutListener("dataGridEnter", KeyCode.ENTER, null) {
+        component.addShortcutListener(new com.vaadin.event.ShortcutListener("dataGridEnter", KeyCode.ENTER, null) {
             @Override
             public void handleAction(Object sender, Object target) {
                 if (target == WebDataGrid.this.component) {

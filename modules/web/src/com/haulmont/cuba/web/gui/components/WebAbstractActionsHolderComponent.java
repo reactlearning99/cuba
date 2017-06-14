@@ -24,7 +24,6 @@ import com.haulmont.cuba.gui.components.Action;
 import com.haulmont.cuba.gui.components.ActionsPermissions;
 import com.haulmont.cuba.gui.components.KeyCombination;
 import com.haulmont.cuba.gui.components.ShortcutsDelegate;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import org.apache.commons.lang.ObjectUtils;
@@ -48,7 +47,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
     protected VerticalLayout contextMenuPopup;
     protected final List<ContextMenuButton> contextMenuButtons = new LinkedList<>();
 
-    protected final ShortcutsDelegate<ShortcutListener> shortcutsDelegate;
+    protected final ShortcutsDelegate<com.vaadin.event.ShortcutListener> shortcutsDelegate;
     protected final ActionsPermissions actionsPermissions = new ActionsPermissions(this);
 
     protected boolean showIconsForPopupMenuActions;
@@ -63,10 +62,12 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         contextMenuPopup.setSizeUndefined();
         contextMenuPopup.setStyleName("c-cm-container");
 
-        shortcutsDelegate = new ShortcutsDelegate<ShortcutListener>() {
+        shortcutsDelegate = new ShortcutsDelegate<com.vaadin.event.ShortcutListener>() {
             @Override
-            protected ShortcutListener attachShortcut(final String actionId, KeyCombination keyCombination) {
-                ShortcutListener shortcut = new ShortcutListener(actionId, keyCombination.getKey().getCode(),
+            protected com.vaadin.event.ShortcutListener attachShortcut(final String actionId,
+                                                                       KeyCombination keyCombination) {
+                com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(actionId,
+                        keyCombination.getKey().getCode(),
                         KeyCombination.Modifier.codes(keyCombination.getModifiers())) {
 
                     @Override
@@ -84,7 +85,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
             }
 
             @Override
-            protected void detachShortcut(Action action, ShortcutListener shortcutDescriptor) {
+            protected void detachShortcut(Action action, com.vaadin.event.ShortcutListener shortcutDescriptor) {
                 component.removeShortcutListener(shortcutDescriptor);
             }
 

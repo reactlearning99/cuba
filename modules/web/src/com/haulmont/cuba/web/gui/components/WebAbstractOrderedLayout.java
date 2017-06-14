@@ -30,7 +30,8 @@ import java.util.*;
 
 public class WebAbstractOrderedLayout<T extends com.vaadin.ui.CssLayout>
         extends WebAbstractComponent<T>
-        implements Component.OrderedContainer, Component.BelongToFrame, Component.HasCaption, Component.HasIcon, Component.LayoutClickNotifier {
+        implements Component.OrderedContainer, Component.BelongToFrame, Component.HasCaption, Component.HasIcon,
+        Component.LayoutClickNotifier, Component.ShortcutNotifier {
 
     protected Collection<Component> ownComponents = new LinkedHashSet<>();
     protected LayoutEvents.LayoutClickListener layoutClickListener;
@@ -201,5 +202,15 @@ public class WebAbstractOrderedLayout<T extends com.vaadin.ui.CssLayout>
             component.removeLayoutClickListener(layoutClickListener);
             layoutClickListener = null;
         }
+    }
+
+    @Override
+    public void addShortcutListener(ShortcutListener listener) {
+        super.addShortcutListener(listener);
+    }
+
+    @Override
+    public void removeShortcutListener(ShortcutListener listener) {
+        super.removeShortcutListener(listener);
     }
 }
