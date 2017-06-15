@@ -566,6 +566,16 @@ public class DesktopTabSheet extends DesktopAbstractComponent<JTabbedPane>
         requestContainerUpdate();
     }
 
+    @Override
+    public void addShortcutAction(ShortcutAction action) {
+        // do nothing
+    }
+
+    @Override
+    public void removeShortcutAction(ShortcutAction action) {
+        // do nothing
+    }
+
     protected class TabImpl implements TabSheet.Tab {
 
         private String name;

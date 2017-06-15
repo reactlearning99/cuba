@@ -26,7 +26,7 @@ import java.util.EventObject;
  * TabSheet component interface.
  */
 public interface TabSheet extends Component.Container, Component.BelongToFrame, Component.HasIcon, Component.HasCaption,
-                                  Component.Focusable {
+                                  Component.Focusable, Component.ShortcutNotifier {
 
     String NAME = "tabSheet";
 

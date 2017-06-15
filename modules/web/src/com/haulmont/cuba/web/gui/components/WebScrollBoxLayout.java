@@ -282,4 +282,14 @@ public class WebScrollBoxLayout extends WebAbstractComponent<CubaScrollBoxLayout
     public void setSpacing(boolean enabled) {
         getContent().setSpacing(enabled);
     }
+
+    @Override
+    public void addShortcutAction(ShortcutAction action) {
+        super.addShortcutAction(action);
+    }
+
+    @Override
+    public void removeShortcutAction(ShortcutAction action) {
+        super.removeShortcutAction(action);
+    }
 }

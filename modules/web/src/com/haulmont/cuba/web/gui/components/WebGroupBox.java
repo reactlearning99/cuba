@@ -377,4 +377,14 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
     public String getStyleName() {
         return StringUtils.normalizeSpace(super.getStyleName().replace(GROUPBOX_PANEL_STYLENAME, ""));
     }
+
+    @Override
+    public void addShortcutAction(ShortcutAction action) {
+        super.addShortcutAction(action);
+    }
+
+    @Override
+    public void removeShortcutAction(ShortcutAction action) {
+        super.removeShortcutAction(action);
+    }
 }

@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.EventObject;
 
 public interface Accordion extends Component.Container, Component.BelongToFrame, Component.HasCaption,
-                                   Component.HasIcon, Component.Focusable {
+                                   Component.HasIcon, Component.Focusable, Component.ShortcutNotifier {
     String NAME = "accordion";
 
     /**
