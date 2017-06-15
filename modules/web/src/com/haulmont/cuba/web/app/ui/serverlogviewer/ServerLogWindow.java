@@ -40,7 +40,9 @@ import com.haulmont.cuba.web.jmx.JmxControlAPI;
 import com.haulmont.cuba.web.jmx.JmxControlException;
 import com.haulmont.cuba.web.jmx.JmxRemoteLoggingAPI;
 import com.haulmont.cuba.web.toolkit.ui.CubaScrollBoxLayout;
-import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.ComboBox;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -196,15 +198,15 @@ public class ServerLogWindow extends AbstractWindow {
         downloadButton.setEnabled(userSession.isSpecificPermitted("cuba.gui.administration.downloadlogs"));
 
         ComboBox comboBox = (ComboBox) WebComponentsHelper.unwrap(logFileNameField);
-        comboBox.addShortcutListener(new com.vaadin.event.ShortcutListener("", ShortcutAction.KeyCode.D,
-                new int[]{ShortcutAction.ModifierKey.CTRL, ShortcutAction.ModifierKey.SHIFT}) {
+        comboBox.addShortcutListener(new ShortcutListener("", KeyCode.D,
+                new int[]{ModifierKey.CTRL, ModifierKey.SHIFT}) {
             @Override
             public void handleAction(Object sender, Object target) {
                 downloadLog();
             }
         });
-        comboBox.addShortcutListener(new com.vaadin.event.ShortcutListener("", ShortcutAction.KeyCode.S,
-                new int[]{ShortcutAction.ModifierKey.CTRL, ShortcutAction.ModifierKey.SHIFT}) {
+        comboBox.addShortcutListener(new com.vaadin.event.ShortcutListener("", KeyCode.S,
+                new int[]{ModifierKey.CTRL, ModifierKey.SHIFT}) {
             @Override
             public void handleAction(Object sender, Object target) {
                 showLogTail();

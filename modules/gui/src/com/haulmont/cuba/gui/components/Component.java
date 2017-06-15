@@ -353,19 +353,19 @@ public interface Component {
     }
 
     interface ShortcutNotifier {
-        void addShortcutListener(ShortcutListener listener);
-        void removeShortcutListener(ShortcutListener listener);
+        void addShortcutAction(ShortcutAction action);
+        void removeShortcutAction(ShortcutAction action);
     }
 
-    class ShortcutListener {
+    class ShortcutAction {
         protected final KeyCombination shortcut;
         protected final Consumer<ShortcutEvent> handler;
 
-        public ShortcutListener(String shortcut, Consumer<ShortcutEvent> handler) {
+        public ShortcutAction(String shortcut, Consumer<ShortcutEvent> handler) {
             this(KeyCombination.create(shortcut), handler);
         }
 
-        public ShortcutListener(KeyCombination shortcut, Consumer<ShortcutEvent> handler) {
+        public ShortcutAction(KeyCombination shortcut, Consumer<ShortcutEvent> handler) {
             this.shortcut = shortcut;
             this.handler = handler;
         }

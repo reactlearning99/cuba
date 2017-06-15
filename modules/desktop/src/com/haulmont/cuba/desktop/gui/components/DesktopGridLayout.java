@@ -402,12 +402,12 @@ public class DesktopGridLayout extends DesktopAbstractComponent<JPanel> implemen
     }
 
     @Override
-    public void addShortcutListener(ShortcutListener listener) {
+    public void addShortcutAction(ShortcutAction action) {
         // do nothing
     }
 
     @Override
-    public void removeShortcutListener(ShortcutListener listener) {
+    public void removeShortcutAction(ShortcutAction action) {
         // do nothing
     }
 }

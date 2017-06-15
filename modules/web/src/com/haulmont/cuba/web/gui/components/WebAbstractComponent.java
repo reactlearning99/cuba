@@ -23,7 +23,6 @@ import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.Frame;
 import com.haulmont.cuba.gui.components.KeyCombination;
 import com.haulmont.cuba.web.AppUI;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
@@ -56,7 +55,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
     protected Alignment alignment = Alignment.TOP_LEFT;
     protected String icon;
 
-    protected Map<ShortcutListener, com.vaadin.event.ShortcutListener> shortcuts = new HashMap<>();
+    protected Map<ShortcutAction, com.vaadin.event.ShortcutListener> shortcuts = new HashMap<>();
 
     private EventRouter eventRouter;
 
@@ -393,7 +392,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
         }
     }
 
-    protected void addShortcutListener(ShortcutListener listener) {
+    protected void addShortcutListener(ShortcutAction listener) {
         KeyCombination keyCombination = listener.getShortcutCombination();
         com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(null,
                 keyCombination.getKey().getCode(),
@@ -409,7 +408,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
         shortcuts.put(listener, shortcut);
     }
 
-    protected void removeShortcutListener(ShortcutListener listener) {
+    protected void removeShortcutListener(ShortcutAction listener) {
         component.removeShortcutListener(shortcuts.remove(listener));
     }
 }

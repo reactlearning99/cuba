@@ -233,12 +233,12 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
     }
 
     @Override
-    public void addShortcutListener(ShortcutListener listener) {
-        super.addShortcutListener(listener);
+    public void addShortcutAction(ShortcutAction action) {
+        super.addShortcutListener(action);
     }
 
     @Override
-    public void removeShortcutListener(ShortcutListener listener) {
-        super.removeShortcutListener(listener);
+    public void removeShortcutAction(ShortcutAction action) {
+        super.removeShortcutListener(action);
     }
 }
