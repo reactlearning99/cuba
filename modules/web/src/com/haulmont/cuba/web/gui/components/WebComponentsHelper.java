@@ -18,7 +18,9 @@ package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Configuration;
+import com.haulmont.cuba.gui.ComponentsHelper;
 import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.Component.ShortcutEvent;
 import com.haulmont.cuba.gui.components.Formatter;
 import com.haulmont.cuba.gui.components.TextField;
 import com.haulmont.cuba.gui.theme.ThemeConstants;
@@ -554,5 +556,24 @@ public class WebComponentsHelper {
                 LoggerFactory.getLogger(WebComponentsHelper.class).warn("Error while validation handling ", e);
             }
         }
+    }
+
+    public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component component, Object target) {
+        com.haulmont.cuba.gui.components.Component cTarget = null;
+
+        if (target == unwrap(component)) {
+            cTarget = component;
+        } else if (component instanceof com.haulmont.cuba.gui.components.Component.Container) {
+            Collection<com.haulmont.cuba.gui.components.Component> components =
+                    ComponentsHelper.getComponents((com.haulmont.cuba.gui.components.Component.Container) component);
+            for (com.haulmont.cuba.gui.components.Component childComponent : components) {
+                if (getComposition(childComponent) == target) {
+                    cTarget = childComponent;
+                    break;
+                }
+            }
+        }
+
+        return new ShortcutEvent(component, cTarget);
     }
 }

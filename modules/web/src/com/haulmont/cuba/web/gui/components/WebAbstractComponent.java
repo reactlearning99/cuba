@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.dom4j.Element;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractComponent>
@@ -392,23 +393,25 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
         }
     }
 
-    protected void addShortcutListener(ShortcutAction listener) {
-        KeyCombination keyCombination = listener.getShortcutCombination();
+    protected void addShortcutAction(ShortcutAction action) {
+        KeyCombination keyCombination = action.getShortcutCombination();
         com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(null,
                 keyCombination.getKey().getCode(),
                 KeyCombination.Modifier.codes(keyCombination.getModifiers())) {
 
             @Override
             public void handleAction(Object sender, Object target) {
-                ShortcutEvent event = new ShortcutEvent(sender, target);
-                listener.getHandler().accept(event);
+                if (sender == component) {
+                    ShortcutEvent event = WebComponentsHelper.getShortcutEvent(WebAbstractComponent.this, target);
+                    action.getHandler().accept(event);
+                }
             }
         };
         component.addShortcutListener(shortcut);
-        shortcuts.put(listener, shortcut);
+        shortcuts.put(action, shortcut);
     }
 
-    protected void removeShortcutListener(ShortcutAction listener) {
-        component.removeShortcutListener(shortcuts.remove(listener));
+    protected void removeShortcutAction(ShortcutAction action) {
+        component.removeShortcutListener(shortcuts.remove(action));
     }
 }
