@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.EventObject;
+import java.util.function.Consumer;
 
 /**
  * Root of the GenericUI components hierarchy
@@ -356,22 +357,26 @@ public interface Component {
         void removeShortcutListener(ShortcutListener listener);
     }
 
-    abstract class ShortcutListener {
-        protected KeyCombination shortcut;
+    class ShortcutListener {
+        protected final KeyCombination shortcut;
+        protected final Consumer<ShortcutEvent> handler;
 
-        public ShortcutListener(String shortcut) {
-            this(KeyCombination.create(shortcut));
+        public ShortcutListener(String shortcut, Consumer<ShortcutEvent> handler) {
+            this(KeyCombination.create(shortcut), handler);
         }
 
-        public ShortcutListener(KeyCombination shortcut) {
+        public ShortcutListener(KeyCombination shortcut, Consumer<ShortcutEvent> handler) {
             this.shortcut = shortcut;
+            this.handler = handler;
         }
 
         public KeyCombination getShortcutCombination() {
             return shortcut;
         }
 
-        public abstract void handleAction(ShortcutEvent event);
+        public Consumer<ShortcutEvent> getHandler() {
+            return handler;
+        }
     }
 
     class ShortcutEvent extends EventObject {

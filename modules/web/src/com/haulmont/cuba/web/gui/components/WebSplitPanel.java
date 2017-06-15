@@ -360,4 +360,14 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
                 return Unit.PIXELS;
         }
     }
+
+    @Override
+    public void addShortcutListener(ShortcutListener listener) {
+        super.addShortcutListener(listener);
+    }
+
+    @Override
+    public void removeShortcutListener(ShortcutListener listener) {
+        super.removeShortcutListener(listener);
+    }
 }

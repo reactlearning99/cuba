@@ -402,7 +402,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
             @Override
             public void handleAction(Object sender, Object target) {
                 ShortcutEvent event = new ShortcutEvent(sender, target);
-                listener.handleAction(event);
+                listener.getHandler().accept(event);
             }
         };
         component.addShortcutListener(shortcut);
