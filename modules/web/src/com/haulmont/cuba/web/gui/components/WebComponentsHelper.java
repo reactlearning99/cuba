@@ -560,13 +560,7 @@ public class WebComponentsHelper {
 
     public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component component, Object target) {
         com.haulmont.cuba.gui.components.Component cTarget = null;
-
-        Component vComponent = unwrap(component);
-        if (target == vComponent
-                || vComponent instanceof SingleComponentContainer
-                && ((SingleComponentContainer) vComponent).getContent() == target) {
-            cTarget = component;
-        } else if (component instanceof com.haulmont.cuba.gui.components.Component.Container) {
+        if (component instanceof com.haulmont.cuba.gui.components.Component.Container) {
             Collection<com.haulmont.cuba.gui.components.Component> components =
                     ComponentsHelper.getComponents((com.haulmont.cuba.gui.components.Component.Container) component);
             for (com.haulmont.cuba.gui.components.Component childComponent : components) {

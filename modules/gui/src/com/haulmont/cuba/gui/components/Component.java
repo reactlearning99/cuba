@@ -379,23 +379,32 @@ public interface Component {
         }
     }
 
+    /**
+     * Describes shortcut event.
+     * The event contains a data about source component and nested component if present.
+     */
     class ShortcutEvent extends EventObject {
-        private final Object target;
+        private final Component childComponent;
 
         /**
-         * Constructs a prototypical Event.
+         * Constructs a shortcut event.
          *
-         * @param source The object on which the Event initially occurred.
-         * @param target
-         * @throws IllegalArgumentException if source is null.
+         * @param source the component on which the Event initially occurred
+         * @param childComponent the nested component if present
+         * @throws IllegalArgumentException if source is null
          */
-        public ShortcutEvent(Object source, Object target) {
+        public ShortcutEvent(Component source, Component childComponent) {
             super(source);
-            this.target = target;
+            this.childComponent = childComponent;
         }
 
-        public Object getTarget() {
-            return target;
+        @Override
+        public Component getSource() {
+            return (Component) super.getSource();
+        }
+
+        public Component getChildComponent() {
+            return childComponent;
         }
     }
 
