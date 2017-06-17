@@ -36,8 +36,19 @@ public class ImageLoader extends AbstractComponentLoader<Image> {
 
     @Override
     public void loadComponent() {
+        assignXmlDescriptor(resultComponent, element);
+
+        loadVisible(resultComponent, element);
+        loadEnable(resultComponent, element);
+
+        loadStyleName(resultComponent, element);
+
+        loadCaption(resultComponent, element);
+        loadDescription(resultComponent, element);
+
         loadWidth(resultComponent, element);
         loadHeight(resultComponent, element);
+        loadAlign(resultComponent, element);
 
         loadDatasource(resultComponent, element);
 
@@ -79,7 +90,7 @@ public class ImageLoader extends AbstractComponentLoader<Image> {
             resultComponent.setSource(resource);
         } catch (MalformedURLException e) {
             String msg = String.format("An error occurred while creating UrlImageResource with the given url: %s", url);
-            throw new RuntimeException(msg, e);
+            throw new GuiDevelopmentException(msg, context.getFullFrameId());
         }
     }
 

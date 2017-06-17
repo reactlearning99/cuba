@@ -17,11 +17,21 @@
 package com.haulmont.cuba.web.toolkit.ui;
 
 import com.haulmont.cuba.web.toolkit.ui.client.image.CubaImageState;
-import com.vaadin.annotations.JavaScript;
+import com.vaadin.server.Page;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.Image;
 
-@JavaScript("vaadin://resources/ofi/ofi.min.js")
 public class CubaImage extends Image {
+
+    public CubaImage() {
+        super();
+
+        WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
+        if (webBrowser.isIE() || webBrowser.isEdge()) {
+            CubaImageIEExtension extension = new CubaImageIEExtension();
+            extension.extend(this);
+        }
+    }
 
     public void setScaleMode(String scaleMode) {
         if (!getState(false).scaleMode.equals(scaleMode)) {

@@ -16,6 +16,7 @@
 
 package com.haulmont.cuba.web.gui.components.imageresources;
 
+import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.core.app.FileStorageService;
 import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.global.AppBeans;
@@ -24,18 +25,20 @@ import com.haulmont.cuba.gui.components.Image;
 import com.haulmont.cuba.gui.export.ByteArrayDataProvider;
 import com.haulmont.cuba.web.gui.components.WebImage;
 import com.vaadin.server.StreamResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class WebFileDescriptorImageResource extends WebImage.WebAbstractImageResource implements WebImageResource, Image.FileDescriptorImageResource {
 
-    private final Logger log = LoggerFactory.getLogger(WebFileDescriptorImageResource.class);
+    protected static final String FILE_STORAGE_EXCEPTION_MESSAGE = "Can't create FileDescriptorImageResource. " +
+            "An error occurred while finding file in file storage";
 
     protected FileDescriptor fileDescriptor;
 
     @Override
     public Image.FileDescriptorImageResource setFileDescriptor(FileDescriptor fileDescriptor) {
+        Preconditions.checkNotNullArgument(fileDescriptor);
+
         this.fileDescriptor = fileDescriptor;
+        hasSource = true;
 
         fireResourceUpdateEvent();
 
@@ -49,26 +52,23 @@ public class WebFileDescriptorImageResource extends WebImage.WebAbstractImageRes
 
     @Override
     protected void createResource() {
-        if (fileDescriptor == null) {
-            log.warn("Can't create FileDescriptorImageResource, because its FileDescriptor is not defined");
-            return;
-        }
-
         FileStorageService fileStorageService = AppBeans.get(FileStorageService.NAME);
+
         try {
-            if (fileStorageService.fileExists(fileDescriptor)) {
-                resource = new StreamResource((StreamResource.StreamSource) () -> {
-                    try {
-                        ByteArrayDataProvider provider = new ByteArrayDataProvider(fileStorageService.loadFile(fileDescriptor));
-                        return provider.provide();
-                    } catch (FileStorageException e) {
-                        log.warn("Can't create FileDescriptorImageResource. An error occurred while loading file from file storage", e);
-                    }
-                    return null;
-                }, fileDescriptor.getName());
+            if (!fileStorageService.fileExists(fileDescriptor)) {
+                throw new RuntimeException("Unable to find a file associated with the given FileDescriptor");
             }
         } catch (FileStorageException e) {
-            log.warn("Can't create FileDescriptorImageResource. An error occurred while finding file in file storage", e);
+            throw new RuntimeException(FILE_STORAGE_EXCEPTION_MESSAGE, e);
         }
+
+        resource = new StreamResource(() -> {
+            try {
+                return new ByteArrayDataProvider(fileStorageService.loadFile(fileDescriptor))
+                        .provide();
+            } catch (FileStorageException e) {
+                throw new RuntimeException(FILE_STORAGE_EXCEPTION_MESSAGE, e);
+            }
+        }, fileDescriptor.getName());
     }
 }

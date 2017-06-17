@@ -32,7 +32,7 @@ public interface Image extends Component, Component.HasCaption {
     /**
      * @return {@link ImageResource} instance
      */
-    <T extends ImageResource> T getSource();
+    ImageResource getSource();
 
     /**
      * Sets the given {@link ImageResource} to the component.
@@ -100,7 +100,7 @@ public interface Image extends Component, Component.HasCaption {
     }
 
     /**
-     * A resource which represents an image which stores in the filesystem as the given <code>File</code>.
+     * A resource that represents an image stored in the file system as the given <code>File</code>.
      */
     interface FileImageResource extends ImageResource {
         FileImageResource setFile(File file);
@@ -109,7 +109,7 @@ public interface Image extends Component, Component.HasCaption {
     }
 
     /**
-     * A resource which represents a theme image, e.g., <code>VAADIN/themes/yourtheme/path</code>
+     * A resource that represents a theme image, e.g., <code>VAADIN/themes/yourtheme/some/path/image.png</code>
      */
     interface ThemeImageResource extends ImageResource {
         ThemeImageResource setPath(String path);
@@ -118,8 +118,8 @@ public interface Image extends Component, Component.HasCaption {
     }
 
     /**
-     * A resource which represents an image, which can be obtained from the <code>FileStorage</code>
-     * by the given FileDescriptor.
+     * A resource that represents an image, which can be obtained from the <code>FileStorage</code> using the given
+     * <code>FileDescriptor</code>.
      */
     interface FileDescriptorImageResource extends ImageResource {
         FileDescriptorImageResource setFileDescriptor(FileDescriptor fileDescriptor);
@@ -128,7 +128,7 @@ public interface Image extends Component, Component.HasCaption {
     }
 
     /**
-     * A resource which represents an image located in classpath with the given <code>path</code>.
+     * A resource that represents an image located in classpath with the given <code>path</code>.
      */
     interface ClasspathImageResource extends ImageResource {
         ClasspathImageResource setPath(String path);
@@ -137,7 +137,7 @@ public interface Image extends Component, Component.HasCaption {
     }
 
     /**
-     * A resource which is stream image representation.
+     * A resource that is a streaming representation of an image.
      */
     interface StreamImageResource extends ImageResource {
         StreamImageResource setStreamSupplier(Supplier<InputStream> streamSupplier);

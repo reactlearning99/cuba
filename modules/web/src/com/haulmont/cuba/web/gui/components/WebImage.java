@@ -39,12 +39,10 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
-    protected static final String STYLENAME = "c-image";
-    public static final String IMAGE_FIT = "object-fit-";
+    protected static final String IMAGE_STYLENAME = "c-image";
+    protected static final String OBJECT_FIT = "object-fit-";
 
     protected ImageResource value;
-
-    protected boolean editable;
 
     protected Datasource datasource;
     protected MetaPropertyPath metaPropertyPath;
@@ -77,7 +75,7 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
 
     public WebImage() {
         component = new CubaImage();
-        component.setPrimaryStyleName(STYLENAME);
+        component.setPrimaryStyleName(IMAGE_STYLENAME);
 
         setScaleMode(this.scaleMode);
 
@@ -179,9 +177,8 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
     }
 
     @Override
-    public <T extends ImageResource> T getSource() {
-        //noinspection unchecked
-        return (T) value;
+    public ImageResource getSource() {
+        return value;
     }
 
     @Override
@@ -209,7 +206,10 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
 
         this.value = value;
 
-        Resource vResource = value == null ? null : ((WebAbstractImageResource) value).getResource();
+        Resource vResource = null;
+        if (value != null && ((WebAbstractImageResource) value).hasSource()) {
+            vResource = ((WebAbstractImageResource) value).getResource();
+        }
         component.setSource(vResource);
 
         if (value != null) {
@@ -266,16 +266,14 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
     }
 
     protected String getStyleNameByScaleMode(ScaleMode scaleMode) {
-        if (scaleMode == null) {
-            return IMAGE_FIT + ScaleMode.NONE.name().toLowerCase();
-        }
-
-        return IMAGE_FIT + scaleMode.name().toLowerCase().replace("_", "-");
+        return OBJECT_FIT + scaleMode.name().toLowerCase().replace("_", "-");
     }
 
     public abstract static class WebAbstractImageResource implements WebImageResource {
         protected Resource resource;
         protected Runnable resourceUpdateHandler;
+
+        protected boolean hasSource = false;
 
         @Override
         public Resource getResource() {
@@ -283,6 +281,10 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
                 createResource();
             }
             return resource;
+        }
+
+        protected boolean hasSource() {
+            return hasSource;
         }
 
         protected void fireResourceUpdateEvent() {

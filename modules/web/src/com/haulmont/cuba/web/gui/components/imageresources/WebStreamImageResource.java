@@ -16,24 +16,25 @@
 
 package com.haulmont.cuba.web.gui.components.imageresources;
 
+import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.gui.components.Image;
 import com.haulmont.cuba.web.gui.components.WebImage;
 import com.vaadin.server.StreamResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.InputStream;
 import java.util.function.Supplier;
 
 public class WebStreamImageResource extends WebImage.WebAbstractImageResource implements WebImageResource, Image.StreamImageResource {
 
-    private final Logger log = LoggerFactory.getLogger(WebStreamImageResource.class);
-
     protected Supplier<InputStream> streamSupplier;
 
     @Override
     public Image.StreamImageResource setStreamSupplier(Supplier<InputStream> streamSupplier) {
+        Preconditions.checkNotNullArgument(streamSupplier);
+
         this.streamSupplier = streamSupplier;
+        hasSource = true;
 
         fireResourceUpdateEvent();
 
@@ -47,12 +48,7 @@ public class WebStreamImageResource extends WebImage.WebAbstractImageResource im
 
     @Override
     protected void createResource() {
-        if (streamSupplier == null) {
-            log.warn("Can't create StreamImageResource, because its stream supplier is not defined");
-            return;
-        }
-
-        resource = new StreamResource((StreamResource.StreamSource) () ->
-                streamSupplier.get(), null);
+        resource = new StreamResource(() ->
+                streamSupplier.get(), RandomStringUtils.random(16, true, true));
     }
 }

@@ -16,22 +16,21 @@
 
 package com.haulmont.cuba.web.gui.components.imageresources;
 
+import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.gui.components.Image;
 import com.haulmont.cuba.web.gui.components.WebImage;
 import com.vaadin.server.ThemeResource;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class WebThemeImageResource extends WebImage.WebAbstractImageResource implements WebImageResource, Image.ThemeImageResource {
-
-    private final Logger log = LoggerFactory.getLogger(WebThemeImageResource.class);
 
     protected String path;
 
     @Override
     public Image.ThemeImageResource setPath(String path) {
+        Preconditions.checkNotNullArgument(path);
+
         this.path = path;
+        hasSource = true;
 
         fireResourceUpdateEvent();
 
@@ -45,11 +44,6 @@ public class WebThemeImageResource extends WebImage.WebAbstractImageResource imp
 
     @Override
     protected void createResource() {
-        if (StringUtils.isEmpty(path)) {
-            log.warn("Can't create ThemeImageResource, because its path is not defined");
-            return;
-        }
-
         resource = new ThemeResource(path);
     }
 }

@@ -16,23 +16,23 @@
 
 package com.haulmont.cuba.web.gui.components.imageresources;
 
+import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.gui.components.Image;
 import com.haulmont.cuba.web.gui.components.WebImage;
 import com.vaadin.server.ExternalResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 
 public class WebUrlImageResource extends WebImage.WebAbstractImageResource implements WebImageResource, Image.UrlImageResource {
 
-    private final Logger log = LoggerFactory.getLogger(WebUrlImageResource.class);
-
     protected URL url;
 
     @Override
     public Image.UrlImageResource setUrl(URL url) {
+        Preconditions.checkNotNullArgument(url);
+
         this.url = url;
+        hasSource = true;
 
         fireResourceUpdateEvent();
 
@@ -46,11 +46,6 @@ public class WebUrlImageResource extends WebImage.WebAbstractImageResource imple
 
     @Override
     protected void createResource() {
-        if (url == null) {
-            log.warn("Can't create UrlImageResource, because its URL is not defined");
-            return;
-        }
-
         resource = new ExternalResource(url);
     }
 }

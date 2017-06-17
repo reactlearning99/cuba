@@ -16,23 +16,23 @@
 
 package com.haulmont.cuba.web.gui.components.imageresources;
 
+import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.gui.components.Image;
 import com.haulmont.cuba.web.gui.components.WebImage;
 import com.vaadin.server.FileResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 public class WebFileImageResource extends WebImage.WebAbstractImageResource implements WebImageResource, Image.FileImageResource {
 
-    private final Logger log = LoggerFactory.getLogger(WebFileImageResource.class);
-
     protected File file;
 
     @Override
     public Image.FileImageResource setFile(File file) {
+        Preconditions.checkNotNullArgument(file);
+
         this.file = file;
+        hasSource = true;
 
         fireResourceUpdateEvent();
 
@@ -46,11 +46,6 @@ public class WebFileImageResource extends WebImage.WebAbstractImageResource impl
 
     @Override
     protected void createResource() {
-        if (file == null || !file.exists()) {
-            log.warn("Can't create FileImageResource, because its file is not defined or file does not exist");
-            return;
-        }
-
         resource = new FileResource(file);
     }
 }

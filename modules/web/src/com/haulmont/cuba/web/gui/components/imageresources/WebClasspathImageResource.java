@@ -16,24 +16,24 @@
 
 package com.haulmont.cuba.web.gui.components.imageresources;
 
+import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Resources;
 import com.haulmont.cuba.gui.components.Image;
 import com.haulmont.cuba.web.gui.components.WebImage;
 import com.vaadin.server.StreamResource;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FilenameUtils;
 
 public class WebClasspathImageResource extends WebImage.WebAbstractImageResource implements WebImageResource, Image.ClasspathImageResource {
-
-    private final Logger log = LoggerFactory.getLogger(WebClasspathImageResource.class);
 
     protected String path;
 
     @Override
     public Image.ClasspathImageResource setPath(String path) {
+        Preconditions.checkNotNullArgument(path);
+
         this.path = path;
+        hasSource = true;
 
         fireResourceUpdateEvent();
 
@@ -47,13 +47,7 @@ public class WebClasspathImageResource extends WebImage.WebAbstractImageResource
 
     @Override
     protected void createResource() {
-        if (StringUtils.isEmpty(path)) {
-            log.warn("Can't create ClasspathImageResource, because its path is not defined");
-            return;
-        }
-
-        String fileName = path.substring(path.lastIndexOf("/") + 1);
-        resource = new StreamResource((StreamResource.StreamSource) () ->
-                AppBeans.get(Resources.class).getResourceAsStream(path), fileName);
+        resource = new StreamResource(() ->
+                AppBeans.get(Resources.class).getResourceAsStream(path), FilenameUtils.getName(path));
     }
 }
