@@ -16,9 +16,9 @@
 
 package com.haulmont.cuba.web.toolkit.ui.client.cubascrollboxlayout;
 
-import com.vaadin.shared.ui.csslayout.CssLayoutState;
+import com.haulmont.cuba.web.toolkit.ui.client.cssactionslayout.CubaCssActionsLayoutState;
 
-public class CubaScrollBoxLayoutState extends CssLayoutState {
+public class CubaScrollBoxLayoutState extends CubaCssActionsLayoutState {
 
     public int scrollTop = 0;
     public int scrollLeft = 0;
