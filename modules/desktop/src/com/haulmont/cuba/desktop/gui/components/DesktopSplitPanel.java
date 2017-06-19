@@ -387,14 +387,4 @@ public class DesktopSplitPanel extends DesktopAbstractComponent<JSplitPane> impl
     public void setDescription(String description) {
         impl.setToolTipText(description);
     }
-
-    @Override
-    public void addShortcutAction(ShortcutAction action) {
-        // do nothing
-    }
-
-    @Override
-    public void removeShortcutAction(ShortcutAction action) {
-        // do nothing
-    }
 }

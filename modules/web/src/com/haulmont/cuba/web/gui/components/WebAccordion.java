@@ -497,16 +497,6 @@ public class WebAccordion extends WebAbstractComponent<CubaAccordion> implements
         listeners.remove(listener);
     }
 
-    @Override
-    public void addShortcutAction(ShortcutAction action) {
-        super.addShortcutAction(action);
-    }
-
-    @Override
-    public void removeShortcutAction(ShortcutAction action) {
-        super.removeShortcutAction(action);
-    }
-
     protected class LazyTabChangeListener implements com.vaadin.ui.Accordion.SelectedTabChangeListener {
         protected WebAbstractBox tabContent;
         protected Element descriptor;

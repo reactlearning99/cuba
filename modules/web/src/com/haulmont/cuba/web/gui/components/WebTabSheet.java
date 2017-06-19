@@ -507,16 +507,6 @@ public class WebTabSheet extends WebAbstractComponent<CubaTabSheet> implements T
         getEventRouter().removeListener(SelectedTabChangeListener.class, listener);
     }
 
-    @Override
-    public void addShortcutAction(ShortcutAction action) {
-        super.addShortcutAction(action);
-    }
-
-    @Override
-    public void removeShortcutAction(ShortcutAction action) {
-        super.removeShortcutAction(action);
-    }
-
     protected void fireTabChanged(SelectedTabChangeEvent event) {
         getEventRouter().fireEvent(SelectedTabChangeListener.class, SelectedTabChangeListener::selectedTabChanged, event);
     }

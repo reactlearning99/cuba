@@ -19,7 +19,7 @@ package com.haulmont.cuba.gui.components;
 import java.util.EventObject;
 
 public interface SplitPanel extends Component.Container, Component.BelongToFrame, Component.HasIcon,
-        Component.HasCaption, Component.HasSettings, Component.ShortcutNotifier {
+        Component.HasCaption, Component.HasSettings {
 
     String NAME = "split";
 
