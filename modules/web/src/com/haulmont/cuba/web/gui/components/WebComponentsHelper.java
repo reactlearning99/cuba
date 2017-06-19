@@ -18,7 +18,6 @@ package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.gui.ComponentsHelper;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.Component.ShortcutEvent;
 import com.haulmont.cuba.gui.components.Formatter;
@@ -558,19 +557,25 @@ public class WebComponentsHelper {
         }
     }
 
-    public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component component, Object target) {
+    public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component component,
+                                                 Component target) {
         com.haulmont.cuba.gui.components.Component cTarget = null;
         if (component instanceof com.haulmont.cuba.gui.components.Component.Container) {
-            Collection<com.haulmont.cuba.gui.components.Component> components =
-                    ComponentsHelper.getComponents((com.haulmont.cuba.gui.components.Component.Container) component);
-            for (com.haulmont.cuba.gui.components.Component childComponent : components) {
-                if (getComposition(childComponent) == target) {
-                    cTarget = childComponent;
-                    break;
-                }
-            }
+            cTarget = findChildComponent((com.haulmont.cuba.gui.components.Component.Container) component, target);
         }
 
         return new ShortcutEvent(component, cTarget);
+    }
+
+    @Nullable
+    protected static com.haulmont.cuba.gui.components.Component findChildComponent(com.haulmont.cuba.gui.components.Component.Container container,
+                                                                                   Component target) {
+        Collection<com.haulmont.cuba.gui.components.Component> components = container.getComponents();
+        for (com.haulmont.cuba.gui.components.Component childComponent : components) {
+            if (childComponent.unwrapComposition(Component.class) == target) {
+                return childComponent;
+            }
+        }
+        return null;
     }
 }
