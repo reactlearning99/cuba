@@ -16,12 +16,21 @@
 
 package com.haulmont.cuba.web.toolkit.ui.client.image;
 
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.ui.VImage;
 
 public class CubaImageWidget extends VImage {
 
-    public native void applyScaling(Element element) /*-{
-        $wnd.objectFitImages(element);
+    protected static int objectFit = 0;
+
+    protected int objectFitId;
+
+    public CubaImageWidget() {
+        objectFitId = objectFit++;
+        getElement().setAttribute("object-fit-id", String.valueOf(objectFitId));
+    }
+
+    public native void applyScaling() /*-{
+        var fitId = this.@com.haulmont.cuba.web.toolkit.ui.client.image.CubaImageWidget::objectFitId;
+        $wnd.objectFitImages("img[object-fit-id='" + fitId + "']");
     }-*/;
 }

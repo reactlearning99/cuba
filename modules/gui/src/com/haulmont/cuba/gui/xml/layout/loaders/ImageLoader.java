@@ -58,10 +58,12 @@ public class ImageLoader extends AbstractComponentLoader<Image> {
     }
 
     protected void loadScaleMode(Image image, Element element) {
-        String scaleMode = element.attributeValue("scaleMode");
-        if (scaleMode != null) {
-            image.setScaleMode(Image.ScaleMode.valueOf(scaleMode));
+        String scaleModeString = element.attributeValue("scaleMode");
+        Image.ScaleMode scaleMode = Image.ScaleMode.NONE;
+        if (scaleModeString != null) {
+            scaleMode = Image.ScaleMode.valueOf(scaleModeString);
         }
+        image.setScaleMode(scaleMode);
     }
 
     protected void loadImageResource(Image image, Element element) {
@@ -141,7 +143,7 @@ public class ImageLoader extends AbstractComponentLoader<Image> {
         File file = new File(filePath);
         if (!file.exists()) {
             String msg = String.format("Can't load FileImageResource. File with given path does not exists: %s", filePath);
-            throw new RuntimeException(msg);
+            throw new GuiDevelopmentException(msg, context.getFullFrameId());
         }
 
         Image.FileImageResource resource = resultComponent.createResource(Image.FileImageResource.class);

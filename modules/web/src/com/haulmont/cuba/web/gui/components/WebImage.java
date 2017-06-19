@@ -77,8 +77,6 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
         component = new CubaImage();
         component.setPrimaryStyleName(IMAGE_STYLENAME);
 
-        setScaleMode(this.scaleMode);
-
         imageResourceUpdateHandler = () -> {
             Resource vRes = this.value == null ? null : ((WebAbstractImageResource) this.value).getResource();
             component.setSource(vRes);
@@ -258,11 +256,9 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
 
         this.scaleMode = scaleMode;
 
-        String mode = getStyleNameByScaleMode(this.scaleMode);
+        component.addStyleName(getStyleNameByScaleMode(this.scaleMode));
 
-        component.addStyleName(mode);
-
-        component.setScaleMode(mode);
+        component.setScaleMode(scaleMode.name().toLowerCase());
     }
 
     protected String getStyleNameByScaleMode(ScaleMode scaleMode) {

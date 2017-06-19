@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.toolkit.ui;
+package com.haulmont.cuba.web.toolkit.ui.client.image;
 
-import com.vaadin.annotations.JavaScript;
-import com.vaadin.server.AbstractExtension;
+import com.haulmont.cuba.web.toolkit.ui.CubaImageObjectFitPolyfillExtension;
+import com.vaadin.client.ServerConnector;
+import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.shared.ui.Connect;
 
-@JavaScript("vaadin://resources/ofi/ofi.min.js")
-public class CubaImageIEExtension extends AbstractExtension {
-
-    public void extend(CubaImage image) {
-        super.extend(image);
+@Connect(CubaImageObjectFitPolyfillExtension.class)
+public class CubaImageObjectFitPolyfillExtensionConnector extends AbstractExtensionConnector {
+    @Override
+    protected void extend(ServerConnector target) {
     }
 }

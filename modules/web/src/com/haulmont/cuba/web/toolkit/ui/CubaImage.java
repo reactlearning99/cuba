@@ -23,16 +23,6 @@ import com.vaadin.ui.Image;
 
 public class CubaImage extends Image {
 
-    public CubaImage() {
-        super();
-
-        WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
-        if (webBrowser.isIE() || webBrowser.isEdge()) {
-            CubaImageIEExtension extension = new CubaImageIEExtension();
-            extension.extend(this);
-        }
-    }
-
     public void setScaleMode(String scaleMode) {
         if (!getState(false).scaleMode.equals(scaleMode)) {
             getState().scaleMode = scaleMode;
@@ -41,6 +31,16 @@ public class CubaImage extends Image {
 
     public String getScaleMode() {
         return getState(false).scaleMode;
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+
+        WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
+        if (webBrowser.isIE() || webBrowser.isEdge()) {
+            CubaImageObjectFitPolyfillExtension.get();
+        }
     }
 
     @Override

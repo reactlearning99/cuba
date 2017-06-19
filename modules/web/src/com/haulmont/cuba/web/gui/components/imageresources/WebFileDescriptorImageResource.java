@@ -52,19 +52,9 @@ public class WebFileDescriptorImageResource extends WebImage.WebAbstractImageRes
 
     @Override
     protected void createResource() {
-        FileStorageService fileStorageService = AppBeans.get(FileStorageService.NAME);
-
-        try {
-            if (!fileStorageService.fileExists(fileDescriptor)) {
-                throw new RuntimeException("Unable to find a file associated with the given FileDescriptor");
-            }
-        } catch (FileStorageException e) {
-            throw new RuntimeException(FILE_STORAGE_EXCEPTION_MESSAGE, e);
-        }
-
         resource = new StreamResource(() -> {
             try {
-                return new ByteArrayDataProvider(fileStorageService.loadFile(fileDescriptor))
+                return new ByteArrayDataProvider(AppBeans.get(FileStorageService.class).loadFile(fileDescriptor))
                         .provide();
             } catch (FileStorageException e) {
                 throw new RuntimeException(FILE_STORAGE_EXCEPTION_MESSAGE, e);

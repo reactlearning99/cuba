@@ -20,5 +20,5 @@ import com.vaadin.shared.ui.image.ImageState;
 
 public class CubaImageState extends ImageState {
 
-    public String scaleMode = "object-fit-none";
+    public String scaleMode = "none";
 }

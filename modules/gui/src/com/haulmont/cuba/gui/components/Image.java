@@ -26,6 +26,11 @@ import java.net.URL;
 import java.util.EventObject;
 import java.util.function.Supplier;
 
+/**
+ * The Image component is intended for displaying graphic content.
+ *
+ * It can be bound to a datasource or configured manually.
+ */
 public interface Image extends Component, Component.HasCaption {
     String NAME = "image";
 
@@ -146,17 +151,17 @@ public interface Image extends Component, Component.HasCaption {
     }
 
     /**
-     * Adds a listener that will be notified when a image source is changed.
+     * Adds a listener that will be notified when a source of an image is changed.
      */
     void addSourceChangeListener(SourceChangeListener listener);
 
     /**
-     * Removes a listener that will be notified when a image source is changed.
+     * Removes a listener that will be notified when a source of an image is changed.
      */
     void removeSourceChangeListener(SourceChangeListener listener);
 
     /**
-     * Listener that will be notified when a image source is changed.
+     * Listener that will be notified when a source of an image is changed.
      */
     @FunctionalInterface
     interface SourceChangeListener {
@@ -164,7 +169,7 @@ public interface Image extends Component, Component.HasCaption {
     }
 
     /**
-     * SourceChangeEvent is fired when a image source is changed.
+     * SourceChangeEvent is fired when a source of an image is changed.
      */
     class SourceChangeEvent extends EventObject {
         protected ImageResource oldSource;

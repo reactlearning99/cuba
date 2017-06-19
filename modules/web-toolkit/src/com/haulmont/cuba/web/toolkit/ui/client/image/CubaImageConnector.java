@@ -29,9 +29,10 @@ public class CubaImageConnector extends ImageConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        if (stateChangeEvent.hasPropertyChanged("scaleMode") &&
-                (BrowserInfo.get().isIE() || BrowserInfo.get().isEdge())) {
-            getWidget().applyScaling(getWidget().getElement());
+        if (stateChangeEvent.hasPropertyChanged("scaleMode")) {
+            if (BrowserInfo.get().isIE() || BrowserInfo.get().isEdge()) {
+                getWidget().applyScaling();
+            }
         }
     }
 
