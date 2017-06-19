@@ -19,10 +19,9 @@ package com.haulmont.cuba.web.toolkit.ui;
 
 import com.haulmont.cuba.web.toolkit.ui.client.flowlayout.CubaFlowLayoutState;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
 
-public class CubaFlowLayout extends CssLayout implements Layout.MarginHandler, Layout.SpacingHandler {
+public class CubaFlowLayout extends CubaCssActionsLayout implements Layout.MarginHandler, Layout.SpacingHandler {
 
     public CubaFlowLayout() {
         setStyleName("c-flowlayout");
