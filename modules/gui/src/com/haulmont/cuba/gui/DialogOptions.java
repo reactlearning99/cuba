@@ -40,7 +40,7 @@ public class DialogOptions {
     private Boolean resizable;
     private Boolean closeable;
     private Boolean modal;
-    private Boolean informationDialog;
+    private Boolean closeOnClickOutside;
 
     private Boolean forceDialog;
 
@@ -171,17 +171,18 @@ public class DialogOptions {
     }
 
     /**
-     * Set informationDialog to true if a window should be closed by click on behind the surrounding dialogue space
+     * Set closeOnClickOutside to true if a window should be closed by click on outside window area.
+     * It works when a window has a model mode.
      */
-    public DialogOptions setInformationDialog(Boolean informationDialog){
-        this.informationDialog = informationDialog;
+    public DialogOptions setCloseOnClickOutside(Boolean closeOnClickOutside) {
+        this.closeOnClickOutside = closeOnClickOutside;
         return this;
     }
 
     /**
-     * @return true if a window can be closed by click on behind the surrounding dialogue space
+     * @return true if a window can be closed by click on outside window area
      */
-    public Boolean getInformationDialog(){
-        return informationDialog;
+    public Boolean getCloseOnClickOutside() {
+        return closeOnClickOutside;
     }
 }

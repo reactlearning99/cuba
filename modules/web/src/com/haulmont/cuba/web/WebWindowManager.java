@@ -759,11 +759,13 @@ public class WebWindowManager extends WindowManager {
         }
         vWindow.setModal(modal);
 
-        boolean informationDialog = false;
-        if(window.getDialogOptions().getInformationDialog() != null){
-            informationDialog = window.getDialogOptions().getInformationDialog();
+        if (vWindow.isModal()) {
+            boolean informationDialog = false;
+            if (openType.getCloseOnClickOutside() != null) {
+                informationDialog = openType.getCloseOnClickOutside();
+            }
+            vWindow.setCloseOnClickOutside(informationDialog);
         }
-        vWindow.setInformationDialog(informationDialog);
 
         getDialogParams().reset();
 
@@ -1196,6 +1198,14 @@ public class WebWindowManager extends WindowManager {
         }
         vWindow.setModal(modal);
 
+        boolean closeOnClickOutside = false;
+        if (vWindow.isModal()) {
+            if (messageType.getCloseOnClickOutside() != null) {
+                closeOnClickOutside = messageType.getCloseOnClickOutside();
+            }
+        }
+        ((CubaWindow) vWindow).setCloseOnClickOutside(closeOnClickOutside);
+
         dialogParams.reset();
 
         ui.addWindow(vWindow);
@@ -1244,6 +1254,14 @@ public class WebWindowManager extends WindowManager {
         window.setWidth(width, Unit.PIXELS);
         window.setResizable(false);
         window.setModal(true);
+
+        boolean closeOnClickOutside = false;
+        if (window.isModal()) {
+            if (messageType.getCloseOnClickOutside() != null) {
+                closeOnClickOutside = messageType.getCloseOnClickOutside();
+            }
+        }
+        ((CubaWindow) window).setCloseOnClickOutside(closeOnClickOutside);
 
         VerticalLayout layout = new VerticalLayout();
         layout.setStyleName("c-app-option-dialog");

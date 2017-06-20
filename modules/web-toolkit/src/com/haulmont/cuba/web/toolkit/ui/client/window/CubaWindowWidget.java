@@ -29,7 +29,7 @@ public class CubaWindowWidget extends VWindow {
     public static final String MODAL_WINDOW_CLASSNAME = "v-window-modal";
     public static final String NONMODAL_WINDOW_CLASSNAME = "v-window-nonmodal";
 
-    public boolean isInformationDialog = false;
+    public boolean closeOnClickOutside = false;
 
     public interface ContextMenuHandler {
         void onContextMenu(Event event);
@@ -50,7 +50,7 @@ public class CubaWindowWidget extends VWindow {
         Event.setEventListener(getModalityCurtain(), new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                if (isInformationDialog) {
+                if (closeOnClickOutside) {
                     if (clickOnModalityCurtain != null) {
                         clickOnModalityCurtain.closeDialogByClick();
                     }
@@ -155,7 +155,11 @@ public class CubaWindowWidget extends VWindow {
         return false;
     }
 
-    public void setInformationDialog(boolean informationDialog){
-        this.isInformationDialog = informationDialog;
+    public void setCloseOnClickOutside(boolean closeOnClickOutside) {
+        this.closeOnClickOutside = closeOnClickOutside;
+    }
+
+    public boolean getCloseOnClickOutside() {
+        return closeOnClickOutside;
     }
 }

@@ -2636,7 +2636,7 @@
                         <xs:attribute name="modal" type="xs:boolean"/>
 
                         <xs:attribute name="forceDialog" type="xs:boolean"/>
-                        <xs:attribute name="informationDialog" type="xs:boolean"/>
+                        <xs:attribute name="closeOnClickOutside" type="xs:boolean"/>
                     </xs:complexType>
                 </xs:element>
 

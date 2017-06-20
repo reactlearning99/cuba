@@ -107,6 +107,6 @@ public class CubaWindowConnector extends WindowConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setInformationDialog(getState().isInformationDialog);
+        getWidget().setCloseOnClickOutside(getState().closeOnClickOutside);
     }
 }

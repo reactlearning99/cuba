@@ -139,8 +139,12 @@ public class CubaWindow extends Window {
         removeCloseShortcut(KeyCode.ESCAPE);
     }
 
-    public void setInformationDialog(boolean informationDialog){
-        getState().isInformationDialog = informationDialog;
+    public void setCloseOnClickOutside(boolean informationDialog) {
+        getState().closeOnClickOutside = informationDialog;
+    }
+
+    public boolean getCloseOnClickOutside() {
+        return getState().closeOnClickOutside;
     }
 
     protected HashSet<Action> getContextActions(Component actionTarget) {
