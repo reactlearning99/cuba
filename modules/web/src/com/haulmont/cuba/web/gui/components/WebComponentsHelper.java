@@ -29,10 +29,7 @@ import com.haulmont.cuba.web.App;
 import com.haulmont.cuba.web.WebConfig;
 import com.haulmont.cuba.web.toolkit.VersionedThemeResource;
 import com.haulmont.cuba.web.toolkit.data.AggregationContainer;
-import com.haulmont.cuba.web.toolkit.ui.CubaGroupBox;
-import com.haulmont.cuba.web.toolkit.ui.CubaHorizontalActionsLayout;
-import com.haulmont.cuba.web.toolkit.ui.CubaTextField;
-import com.haulmont.cuba.web.toolkit.ui.CubaVerticalActionsLayout;
+import com.haulmont.cuba.web.toolkit.ui.*;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
@@ -52,7 +49,6 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.lang.reflect.Field;
 
 public class WebComponentsHelper {
 
@@ -561,13 +557,27 @@ public class WebComponentsHelper {
     public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component source, Component target) {
         com.haulmont.cuba.gui.components.Component childComponent = null;
         if (source instanceof Container) {
-            Component vaadinSource = source.unwrapComposition(Component.class);
+            Container container = (Container) source;
+            Component vaadinSource = getVaadinSource(container);
             Component targetComponent = getDirectChildComponent(target, vaadinSource);
 
-            childComponent = findChildComponent((Container) source, targetComponent);
+            childComponent = findChildComponent(container, targetComponent);
         }
 
         return new ShortcutEvent(source, childComponent);
+    }
+
+    protected static Component getVaadinSource(Container source) {
+        Component component = source.unwrapComposition(Component.class);
+        if (component instanceof AbstractSingleComponentContainer) {
+            return ((AbstractSingleComponentContainer) component).getContent();
+        }
+
+        if (component instanceof CubaScrollBoxLayout) {
+            return ((CubaScrollBoxLayout) component).getComponent(0);
+        }
+
+        return component;
     }
 
     /**
