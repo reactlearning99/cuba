@@ -19,6 +19,7 @@ package com.haulmont.cuba.web.gui.components;
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.Component.Container;
 import com.haulmont.cuba.gui.components.Component.ShortcutEvent;
 import com.haulmont.cuba.gui.components.Formatter;
 import com.haulmont.cuba.gui.components.TextField;
@@ -557,18 +558,31 @@ public class WebComponentsHelper {
         }
     }
 
-    public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component component,
-                                                 Component target) {
-        com.haulmont.cuba.gui.components.Component cTarget = null;
-        if (component instanceof com.haulmont.cuba.gui.components.Component.Container) {
-            cTarget = findChildComponent((com.haulmont.cuba.gui.components.Component.Container) component, target);
+    public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component source, Component target) {
+        com.haulmont.cuba.gui.components.Component childComponent = null;
+        if (source instanceof Container) {
+            Component vaadinSource = source.unwrapComposition(Component.class);
+            Component targetComponent = getDirectChildComponent(target, vaadinSource);
+
+            childComponent = findChildComponent((Container) source, targetComponent);
         }
 
-        return new ShortcutEvent(component, cTarget);
+        return new ShortcutEvent(source, childComponent);
+    }
+
+    /**
+     * @return the direct child component of the layout which contains the component involved to event
+     */
+    protected static Component getDirectChildComponent(Component targetComponent, Component vaadinSource) {
+        while (targetComponent != null
+                && targetComponent.getParent() != vaadinSource) {
+            targetComponent = targetComponent.getParent();
+        }
+        return targetComponent;
     }
 
     @Nullable
-    protected static com.haulmont.cuba.gui.components.Component findChildComponent(com.haulmont.cuba.gui.components.Component.Container container,
+    protected static com.haulmont.cuba.gui.components.Component findChildComponent(Container container,
                                                                                    Component target) {
         Collection<com.haulmont.cuba.gui.components.Component> components = container.getComponents();
         for (com.haulmont.cuba.gui.components.Component childComponent : components) {
