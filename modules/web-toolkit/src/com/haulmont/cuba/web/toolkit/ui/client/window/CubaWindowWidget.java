@@ -20,6 +20,7 @@ package com.haulmont.cuba.web.toolkit.ui.client.window;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.haulmont.cuba.web.toolkit.ui.client.appui.ValidationErrorHolder;
 import com.vaadin.client.ui.VWindow;
 
@@ -28,15 +29,34 @@ public class CubaWindowWidget extends VWindow {
     public static final String MODAL_WINDOW_CLASSNAME = "v-window-modal";
     public static final String NONMODAL_WINDOW_CLASSNAME = "v-window-nonmodal";
 
+    public boolean isInformationDialog = false;
+
     public interface ContextMenuHandler {
         void onContextMenu(Event event);
     }
 
     protected ContextMenuHandler contextMenuHandler;
 
+    public interface ClickOnModalityCurtain {
+        void closeDialogByClick();
+    }
+
+    protected ClickOnModalityCurtain clickOnModalityCurtain;
+
     public CubaWindowWidget() {
         DOM.sinkEvents(header, DOM.getEventsSunk(header) | Event.ONCONTEXTMENU);
         addStyleName(NONMODAL_WINDOW_CLASSNAME);
+        Event.sinkEvents(getModalityCurtain(), Event.ONCLICK);
+        Event.setEventListener(getModalityCurtain(), new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                if (isInformationDialog) {
+                    if (clickOnModalityCurtain != null) {
+                        clickOnModalityCurtain.closeDialogByClick();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -133,5 +153,9 @@ public class CubaWindowWidget extends VWindow {
             }
         }
         return false;
+    }
+
+    public void setInformationDialog(boolean informationDialog){
+        this.isInformationDialog = informationDialog;
     }
 }

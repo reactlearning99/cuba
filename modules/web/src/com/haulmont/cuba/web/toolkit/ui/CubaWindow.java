@@ -75,6 +75,11 @@ public class CubaWindow extends Window {
                 contextActionMapper = null;
             }
         }
+
+        @Override
+        public void performCloseAction() {
+            close();
+        }
     };
 
     protected static final Method BEFORE_WINDOW_CLOSE_METHOD;
@@ -132,6 +137,10 @@ public class CubaWindow extends Window {
         registerRpc(rpc);
 
         removeCloseShortcut(KeyCode.ESCAPE);
+    }
+
+    public void setInformationDialog(boolean informationDialog){
+        getState().isInformationDialog = informationDialog;
     }
 
     protected HashSet<Action> getContextActions(Component actionTarget) {

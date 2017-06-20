@@ -759,6 +759,12 @@ public class WebWindowManager extends WindowManager {
         }
         vWindow.setModal(modal);
 
+        boolean informationDialog = false;
+        if(window.getDialogOptions().getInformationDialog() != null){
+            informationDialog = window.getDialogOptions().getInformationDialog();
+        }
+        vWindow.setInformationDialog(informationDialog);
+
         getDialogParams().reset();
 
         ui.addWindow(vWindow);

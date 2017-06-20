@@ -137,6 +137,11 @@ public class WindowLoader extends FrameLoader<Window> {
             if (StringUtils.isNotEmpty(forceDialog)) {
                 dialogOptions.setForceDialog(Boolean.parseBoolean(forceDialog));
             }
+
+            String informationDialog = dialogModeElement.attributeValue("informationDialog");
+            if (StringUtils.isNotEmpty(informationDialog)) {
+                dialogOptions.setInformationDialog(Boolean.parseBoolean(informationDialog));
+            }
         }
     }
 

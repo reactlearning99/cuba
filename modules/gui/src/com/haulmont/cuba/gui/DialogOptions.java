@@ -40,6 +40,7 @@ public class DialogOptions {
     private Boolean resizable;
     private Boolean closeable;
     private Boolean modal;
+    private Boolean informationDialog;
 
     private Boolean forceDialog;
 
@@ -167,5 +168,20 @@ public class DialogOptions {
      * */
     public DialogOptions center() {
         return this;
+    }
+
+    /**
+     * Set informationDialog to true if a window should be closed by click on behind the surrounding dialogue space
+     */
+    public DialogOptions setInformationDialog(Boolean informationDialog){
+        this.informationDialog = informationDialog;
+        return this;
+    }
+
+    /**
+     * @return true if a window can be closed by click on behind the surrounding dialogue space
+     */
+    public Boolean getInformationDialog(){
+        return informationDialog;
     }
 }
