@@ -56,8 +56,6 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
     protected Alignment alignment = Alignment.TOP_LEFT;
     protected String icon;
 
-    protected Map<ShortcutAction, com.vaadin.event.ShortcutListener> shortcuts = new HashMap<>();
-
     private EventRouter eventRouter;
 
     /**
@@ -391,26 +389,5 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.AbstractCompo
                 composition.setComponentError(new UserError(errorMessage));
             }
         }
-    }
-
-    protected void addShortcutAction(ShortcutAction action) {
-        KeyCombination keyCombination = action.getShortcutCombination();
-        com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(null,
-                keyCombination.getKey().getCode(),
-                KeyCombination.Modifier.codes(keyCombination.getModifiers())) {
-
-            @Override
-            public void handleAction(Object sender, Object target) {
-                ShortcutEvent event = WebComponentsHelper.getShortcutEvent(WebAbstractComponent.this,
-                        (com.vaadin.ui.Component) target);
-                action.getHandler().accept(event);
-            }
-        };
-        component.addShortcutListener(shortcut);
-        shortcuts.put(action, shortcut);
-    }
-
-    protected void removeShortcutAction(ShortcutAction action) {
-        component.removeShortcutListener(shortcuts.remove(action));
     }
 }

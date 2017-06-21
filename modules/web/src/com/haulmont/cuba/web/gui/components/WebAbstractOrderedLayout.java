@@ -21,7 +21,9 @@ import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.gui.ComponentsHelper;
 import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.Frame;
+import com.haulmont.cuba.gui.components.KeyCombination;
 import com.vaadin.event.LayoutEvents;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
 
 import javax.annotation.Nonnull;
@@ -35,6 +37,7 @@ public class WebAbstractOrderedLayout<T extends com.vaadin.ui.CssLayout>
 
     protected Collection<Component> ownComponents = new LinkedHashSet<>();
     protected LayoutEvents.LayoutClickListener layoutClickListener;
+    protected Map<Component.ShortcutAction, ShortcutListener> shortcuts;
 
     @Override
     public void add(Component childComponent) {
@@ -206,11 +209,34 @@ public class WebAbstractOrderedLayout<T extends com.vaadin.ui.CssLayout>
 
     @Override
     public void addShortcutAction(ShortcutAction action) {
-        super.addShortcutAction(action);
+        KeyCombination keyCombination = action.getShortcutCombination();
+        com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(null,
+                keyCombination.getKey().getCode(),
+                KeyCombination.Modifier.codes(keyCombination.getModifiers())) {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                Component.ShortcutEvent event = WebComponentsHelper.getShortcutEvent(WebAbstractOrderedLayout.this,
+                        (com.vaadin.ui.Component) target);
+                action.getHandler().accept(event);
+            }
+        };
+        component.addShortcutListener(shortcut);
+
+        if (shortcuts == null) {
+            shortcuts = new HashMap<>();
+        }
+        shortcuts.put(action, shortcut);
     }
 
     @Override
     public void removeShortcutAction(ShortcutAction action) {
-        super.removeShortcutAction(action);
+        if (shortcuts != null) {
+            component.removeShortcutListener(shortcuts.remove(action));
+
+            if (shortcuts.isEmpty()) {
+                shortcuts = null;
+            }
+        }
     }
 }
