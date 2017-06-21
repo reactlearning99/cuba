@@ -238,17 +238,8 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
     @Override
     public void addShortcutAction(ShortcutAction action) {
         KeyCombination keyCombination = action.getShortcutCombination();
-        com.vaadin.event.ShortcutListener shortcut = new com.vaadin.event.ShortcutListener(null,
-                keyCombination.getKey().getCode(),
-                KeyCombination.Modifier.codes(keyCombination.getModifiers())) {
-
-            @Override
-            public void handleAction(Object sender, Object target) {
-                Component.ShortcutEvent event = WebComponentsHelper.getShortcutEvent(WebAbstractBox.this,
-                        (com.vaadin.ui.Component) target);
-                action.getHandler().accept(event);
-            }
-        };
+        com.vaadin.event.ShortcutListener shortcut =
+                new ContainerShortcutActionWrapper(action, this, keyCombination);
         component.addShortcutListener(shortcut);
 
         if (shortcuts == null) {
