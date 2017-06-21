@@ -21,16 +21,13 @@ import com.vaadin.client.ui.VImage;
 
 public class CubaImageWidget extends VImage {
     protected static final String OBJECT_FIT = "object-fit-";
+    public static final String OBJECT_FIT_ATTRIBUTE = "object-fit-id";
 
     protected static int objectFit = 0;
-
-    protected int objectFitId;
     protected String scaleMode = "none";
 
     public CubaImageWidget() {
-        objectFitId = objectFit++;
-
-        getElement().setAttribute("object-fit-id", String.valueOf(objectFitId));
+        getElement().setAttribute(OBJECT_FIT_ATTRIBUTE, String.valueOf(objectFit++));
 
         addStyleName(OBJECT_FIT + scaleMode);
     }
@@ -43,7 +40,7 @@ public class CubaImageWidget extends VImage {
         addStyleName(OBJECT_FIT + scaleMode);
 
         if (BrowserInfo.get().isIE() || BrowserInfo.get().isEdge()) {
-            applyScaling(objectFitId);
+            applyScaling(Integer.valueOf(getElement().getAttribute(OBJECT_FIT_ATTRIBUTE)));
         }
     }
 

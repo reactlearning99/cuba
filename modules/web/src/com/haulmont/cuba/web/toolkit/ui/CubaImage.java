@@ -39,7 +39,7 @@ public class CubaImage extends Image {
 
         WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
         if (webBrowser.isIE() || webBrowser.isEdge()) {
-            CubaImageObjectFitPolyfillExtension.get();
+            CubaImageObjectFitPolyfillExtension.get(getUI());
         }
     }
 

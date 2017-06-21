@@ -47,14 +47,4 @@ public class CubaImageObjectFitPolyfillExtension extends AbstractExtension {
 
         return extension;
     }
-
-    public static CubaImageObjectFitPolyfillExtension get() {
-        UI ui = UI.getCurrent();
-
-        if (ui == null) {
-            throw new IllegalStateException(
-                    "This method must be used from UI thread");
-        }
-        return get(ui);
-    }
 }
