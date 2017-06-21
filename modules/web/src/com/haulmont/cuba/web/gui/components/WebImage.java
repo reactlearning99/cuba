@@ -40,7 +40,6 @@ import java.util.function.Supplier;
 
 public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
     protected static final String IMAGE_STYLENAME = "c-image";
-    protected static final String OBJECT_FIT = "object-fit-";
 
     protected ImageResource value;
 
@@ -252,17 +251,9 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
     public void setScaleMode(ScaleMode scaleMode) {
         Preconditions.checkNotNullArgument(scaleMode);
 
-        component.removeStyleName(getStyleNameByScaleMode(this.scaleMode));
-
         this.scaleMode = scaleMode;
 
-        component.addStyleName(getStyleNameByScaleMode(this.scaleMode));
-
-        component.setScaleMode(scaleMode.name().toLowerCase());
-    }
-
-    protected String getStyleNameByScaleMode(ScaleMode scaleMode) {
-        return OBJECT_FIT + scaleMode.name().toLowerCase().replace("_", "-");
+        component.setScaleMode(scaleMode.name().toLowerCase().replace("_", "-"));
     }
 
     public abstract static class WebAbstractImageResource implements WebImageResource {

@@ -16,21 +16,35 @@
 
 package com.haulmont.cuba.web.toolkit.ui.client.image;
 
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ui.VImage;
 
 public class CubaImageWidget extends VImage {
+    protected static final String OBJECT_FIT = "object-fit-";
 
     protected static int objectFit = 0;
 
     protected int objectFitId;
+    protected String scaleMode = "none";
 
     public CubaImageWidget() {
         objectFitId = objectFit++;
+
         getElement().setAttribute("object-fit-id", String.valueOf(objectFitId));
+
+        addStyleName(OBJECT_FIT + scaleMode);
     }
 
-    public void applyScaling() {
-        applyScaling(objectFitId);
+    public void applyScaling(String scaleMode) {
+        removeStyleName(OBJECT_FIT + this.scaleMode);
+
+        this.scaleMode = scaleMode;
+
+        addStyleName(OBJECT_FIT + scaleMode);
+
+        if (BrowserInfo.get().isIE() || BrowserInfo.get().isEdge()) {
+            applyScaling(objectFitId);
+        }
     }
 
     protected native void applyScaling(int fitId) /*-{
