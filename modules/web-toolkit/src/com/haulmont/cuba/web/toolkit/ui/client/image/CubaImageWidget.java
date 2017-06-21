@@ -29,8 +29,13 @@ public class CubaImageWidget extends VImage {
         getElement().setAttribute("object-fit-id", String.valueOf(objectFitId));
     }
 
-    public native void applyScaling() /*-{
-        var fitId = this.@com.haulmont.cuba.web.toolkit.ui.client.image.CubaImageWidget::objectFitId;
-        $wnd.objectFitImages("img[object-fit-id='" + fitId + "']");
+    public void applyScaling() {
+        applyScaling(objectFitId);
+    }
+
+    protected native void applyScaling(int fitId) /*-{
+        var selector = "img[object-fit-id='" + fitId + "']";
+        var image = document.querySelector(selector);
+        $wnd.objectFitImages(image);
     }-*/;
 }
