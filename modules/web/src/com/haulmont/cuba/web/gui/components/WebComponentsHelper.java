@@ -20,7 +20,7 @@ import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.Component.Container;
-import com.haulmont.cuba.gui.components.Component.ShortcutEvent;
+import com.haulmont.cuba.gui.components.Component.ShortcutTriggeredEvent;
 import com.haulmont.cuba.gui.components.Formatter;
 import com.haulmont.cuba.gui.components.TextField;
 import com.haulmont.cuba.gui.theme.ThemeConstants;
@@ -554,20 +554,26 @@ public class WebComponentsHelper {
         }
     }
 
-    public static ShortcutEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component source, Component target) {
-        com.haulmont.cuba.gui.components.Component childComponent = null;
-        if (source instanceof Container) {
-            Container container = (Container) source;
-            Component vaadinSource = getVaadinSource(container);
-            Component targetComponent = getDirectChildComponent(target, vaadinSource);
+    public static ShortcutTriggeredEvent getShortcutEvent(com.haulmont.cuba.gui.components.Component source,
+                                                          Component target) {
+        Component vaadinSource = getVaadinSource(source);
 
-            childComponent = findChildComponent(container, targetComponent);
+        if (vaadinSource == target) {
+            return new ShortcutTriggeredEvent(source, source);
         }
 
-        return new ShortcutEvent(source, childComponent);
+        if (source instanceof Container) {
+            Container container = (Container) source;
+            Component targetComponent = getDirectChildComponent(target, vaadinSource);
+            com.haulmont.cuba.gui.components.Component childComponent =
+                    findChildComponent(container, targetComponent);
+            return new ShortcutTriggeredEvent(source, childComponent);
+        }
+
+        return new ShortcutTriggeredEvent(source, null);
     }
 
-    protected static Component getVaadinSource(Container source) {
+    protected static Component getVaadinSource(com.haulmont.cuba.gui.components.Component source) {
         Component component = source.unwrapComposition(Component.class);
         if (component instanceof AbstractSingleComponentContainer) {
             return ((AbstractSingleComponentContainer) component).getContent();

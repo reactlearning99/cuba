@@ -352,50 +352,62 @@ public interface Component {
         }
     }
 
+    /**
+     * Component having a shortcut listener.
+     */
     interface ShortcutNotifier {
         void addShortcutAction(ShortcutAction action);
         void removeShortcutAction(ShortcutAction action);
     }
 
+    /**
+     * The ShortcutAction is triggered when the user presses a given key combination.
+     */
     class ShortcutAction {
         protected final KeyCombination shortcut;
-        protected final Consumer<ShortcutEvent> handler;
+        protected final Consumer<ShortcutTriggeredEvent> handler;
 
-        public ShortcutAction(String shortcut, Consumer<ShortcutEvent> handler) {
+        public ShortcutAction(String shortcut, Consumer<ShortcutTriggeredEvent> handler) {
             this(KeyCombination.create(shortcut), handler);
         }
 
-        public ShortcutAction(KeyCombination shortcut, Consumer<ShortcutEvent> handler) {
+        public ShortcutAction(KeyCombination shortcut, Consumer<ShortcutTriggeredEvent> handler) {
             this.shortcut = shortcut;
             this.handler = handler;
         }
 
+        /**
+         * @return the key combination that the shortcut reacts to
+         */
         public KeyCombination getShortcutCombination() {
             return shortcut;
         }
 
-        public Consumer<ShortcutEvent> getHandler() {
+        /**
+         * @return the handler invoked when the shortcut is triggered
+         */
+        public Consumer<ShortcutTriggeredEvent> getHandler() {
             return handler;
         }
     }
 
     /**
-     * Describes shortcut event.
-     * The event contains a data about source component and nested component if present.
+     * Describes shortcut triggered event.
+     * The event contains a data about source component and target component.
      */
-    class ShortcutEvent extends EventObject {
-        private final Component childComponent;
+    class ShortcutTriggeredEvent extends EventObject {
+        private final Component target;
 
         /**
-         * Constructs a shortcut event.
+         * Constructs a shortcut triggered event.
          *
          * @param source the component on which the Event initially occurred
-         * @param childComponent the nested component if present
+         * @param target the component which was focused when the Event occurred
          * @throws IllegalArgumentException if source is null
          */
-        public ShortcutEvent(Component source, Component childComponent) {
+        public ShortcutTriggeredEvent(Component source, Component target) {
             super(source);
-            this.childComponent = childComponent;
+            this.target = target;
         }
 
         @Override
@@ -403,8 +415,11 @@ public interface Component {
             return (Component) super.getSource();
         }
 
-        public Component getChildComponent() {
-            return childComponent;
+        /**
+         * @return the component which was focused when the Event occurred
+         */
+        public Component getTarget() {
+            return target;
         }
     }
 

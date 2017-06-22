@@ -35,7 +35,7 @@ public class ContainerShortcutActionWrapper extends com.vaadin.event.ShortcutLis
 
     @Override
     public void handleAction(Object sender, Object target) {
-        Component.ShortcutEvent event = WebComponentsHelper.getShortcutEvent(container,
+        Component.ShortcutTriggeredEvent event = WebComponentsHelper.getShortcutEvent(container,
                 (com.vaadin.ui.Component) target);
         action.getHandler().accept(event);
     }
