@@ -96,12 +96,7 @@ public class CubaWindowConnector extends WindowConnector {
                 }
             }
         };
-        getWidget().clickOnModalityCurtain = new CubaWindowWidget.ClickOnModalityCurtain() {
-            @Override
-            public void closeDialogByClick() {
-                rpc.performCloseAction();
-            }
-        };
+        getWidget().clickOnModalityCurtain = () -> rpc.performCloseAction();
     }
 
     @Override

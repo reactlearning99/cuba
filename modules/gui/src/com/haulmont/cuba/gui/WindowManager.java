@@ -246,7 +246,7 @@ public abstract class WindowManager {
 
         /**
          * Set closeOnClickOutside to true if a window should be closed by click on outside window area.
-         * It works when a window has a model mode.
+         * It works when a window has a modal mode.
          */
         public OpenType closeOnClickOutside(Boolean closeOnClickOutside) {
             OpenType instance = getMutableInstance();
@@ -257,7 +257,7 @@ public abstract class WindowManager {
 
         /**
          * Set closeOnClickOutside to true if a window should be closed by click on outside window area.
-         * It works when a window has a model mode.
+         * It works when a window has a modal mode.
          */
         public OpenType setCloseOnClickOutside(Boolean closeOnClickOutside) {
             OpenType instance = getMutableInstance();

@@ -140,7 +140,7 @@ public class CubaWindow extends Window {
     }
 
     public void setCloseOnClickOutside(boolean informationDialog) {
-        getState().closeOnClickOutside = informationDialog;
+        getState(false).closeOnClickOutside = informationDialog;
     }
 
     public boolean getCloseOnClickOutside() {
@@ -163,6 +163,11 @@ public class CubaWindow extends Window {
     @Override
     protected CubaWindowState getState() {
         return (CubaWindowState) super.getState();
+    }
+
+    @Override
+    protected CubaWindowState getState(boolean markAsDirty) {
+        return (CubaWindowState) super.getState(markAsDirty);
     }
 
     @Override

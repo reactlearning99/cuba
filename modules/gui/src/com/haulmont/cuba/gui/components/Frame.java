@@ -370,7 +370,7 @@ public interface Frame
 
         /**
          * Set closeOnClickOutside to true if a window should be closed by click on outside window area.
-         * It works when a window has a model mode.
+         * It works when a window has a modal mode.
          */
         public MessageType setCloseOnClickOutside(boolean closeOnClickOutside) {
             MessageType instance = getMutableInstance();
@@ -381,7 +381,7 @@ public interface Frame
 
         /**
          * Set closeOnClickOutside to true if a window should be closed by click on outside window area.
-         * It works when a window has a model mode.
+         * It works when a window has a modal mode.
          */
         public MessageType closeOnClickOutside(boolean closeOnClickOutside) {
             MessageType instance = getMutableInstance();

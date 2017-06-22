@@ -37,23 +37,16 @@ public class CubaWindowWidget extends VWindow {
 
     protected ContextMenuHandler contextMenuHandler;
 
-    public interface ClickOnModalityCurtain {
-        void closeDialogByClick();
-    }
-
-    protected ClickOnModalityCurtain clickOnModalityCurtain;
+    protected Runnable clickOnModalityCurtain;
 
     public CubaWindowWidget() {
         DOM.sinkEvents(header, DOM.getEventsSunk(header) | Event.ONCONTEXTMENU);
         addStyleName(NONMODAL_WINDOW_CLASSNAME);
         Event.sinkEvents(getModalityCurtain(), Event.ONCLICK);
-        Event.setEventListener(getModalityCurtain(), new EventListener() {
-            @Override
-            public void onBrowserEvent(Event event) {
-                if (closeOnClickOutside) {
-                    if (clickOnModalityCurtain != null) {
-                        clickOnModalityCurtain.closeDialogByClick();
-                    }
+        Event.setEventListener(getModalityCurtain(), event -> {
+            if (closeOnClickOutside) {
+                if (clickOnModalityCurtain != null) {
+                    clickOnModalityCurtain.run();
                 }
             }
         });
