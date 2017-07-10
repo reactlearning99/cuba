@@ -145,6 +145,17 @@ public class UserBrowser extends AbstractLookup {
             }
             return false;
         });
+        removeAction.addEnabledRule(() -> {
+            Set<User> selected = usersTable.getSelected();
+            if (selected.isEmpty())
+                return false;
+
+            for (User user : selected) {
+                if (userManagementService.isSystemUser(user.getLogin()))
+                    return false;
+            }
+            return true;
+        });
         removeAction.setAfterRemoveHandler(removedItems -> {
             UserBrowser.Companion companion = getCompanion();
             if (companion != null) {

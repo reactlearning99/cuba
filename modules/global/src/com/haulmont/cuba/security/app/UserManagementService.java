@@ -137,4 +137,12 @@ public interface UserManagementService {
      * @param newPasswordHash password hash
      */
     void changeUserPassword(UUID userId, String newPasswordHash);
+
+    /**
+     * Checks if user with the given login is system user, e.g. anonymous or jmx user
+     *
+     * @param userLogin user login
+     * @return true if user is system user or false otherwise
+     */
+    boolean isSystemUser(String userLogin);
 }

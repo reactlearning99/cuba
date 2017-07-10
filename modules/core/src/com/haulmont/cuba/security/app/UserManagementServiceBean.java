@@ -719,4 +719,9 @@ public class UserManagementServiceBean implements UserManagementService {
             return bodyTemplate;
         }
     }
+
+    @Override
+    public boolean isSystemUser(String userLogin) {
+        return serverConfig.getJmxUserLogin().equals(userLogin) || serverConfig.getAnonymousLogin().equals(userLogin);
+    }
 }
