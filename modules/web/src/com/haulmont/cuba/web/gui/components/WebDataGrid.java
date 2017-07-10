@@ -142,6 +142,8 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
 
     protected boolean showIconsForPopupMenuActions;
 
+    protected boolean testMode;
+
     static {
         ImmutableMap.Builder<Class<? extends Renderer>, Class<? extends Renderer>> builder =
                 new ImmutableMap.Builder<>();
@@ -166,6 +168,9 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
         Configuration configuration = AppBeans.get(Configuration.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         showIconsForPopupMenuActions = clientConfig.getShowIconsForPopupMenuActions();
+
+        AppUI current = AppUI.getCurrent();
+        testMode = (current != null && current.isTestMode());
 
         shortcutsDelegate = new ShortcutsDelegate<ShortcutListener>() {
             @Override
@@ -605,6 +610,10 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
         gridColumn.setResizable(column.isResizable());
         gridColumn.setEditable(column.isEditable());
 
+        if (testMode) {
+            addColumnId(gridColumn, column);
+        }
+
         // workaround to prevent exception from GridColumn while Grid is using default IndexedContainer
         if (getContainerDataSource() instanceof SortableDataGridIndexedCollectionDsWrapper) {
             gridColumn.setSortable(column.isSortable() && column.getOwner().isSortable());
@@ -628,6 +637,14 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
                 setDefaultRenderer(gridColumn, metaProperty, column.getType());
             }
         }
+    }
+
+    protected void addColumnId(Grid.Column gridColumn, Column column) {
+        component.addColumnId(gridColumn.getState().id, column.getId());
+    }
+
+    protected void removeColumnId(Grid.Column gridColumn) {
+        component.removeColumnId(gridColumn.getState().id);
     }
 
     protected void setDefaultRenderer(Grid.Column gridColumn, @Nullable MetaProperty metaProperty, Class type) {
@@ -3101,6 +3118,10 @@ public class WebDataGrid<E extends Entity> extends WebAbstractComponent<CubaGrid
         }
 
         public void setGridColumn(Grid.Column gridColumn) {
+            if (owner.testMode && gridColumn == null) {
+                owner.removeColumnId(this.gridColumn);
+            }
+
             this.gridColumn = gridColumn;
         }
 
