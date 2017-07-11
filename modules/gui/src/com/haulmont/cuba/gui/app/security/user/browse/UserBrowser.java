@@ -41,6 +41,7 @@ import org.apache.commons.lang.BooleanUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserBrowser extends AbstractLookup {
 
@@ -150,11 +151,11 @@ public class UserBrowser extends AbstractLookup {
             if (selected.isEmpty())
                 return false;
 
-            for (User user : selected) {
-                if (userManagementService.isSystemUser(user.getLogin()))
-                    return false;
-            }
-            return true;
+            List<String> logins = selected.stream()
+                    .map(User::getLogin)
+                    .collect(Collectors.toList());
+
+            return userManagementService.isUsersRemovingAllowed(logins);
         });
         removeAction.setAfterRemoveHandler(removedItems -> {
             UserBrowser.Companion companion = getCompanion();

@@ -21,6 +21,7 @@ import com.haulmont.cuba.security.entity.Group;
 import com.haulmont.cuba.security.entity.Role;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -139,10 +140,10 @@ public interface UserManagementService {
     void changeUserPassword(UUID userId, String newPasswordHash);
 
     /**
-     * Checks if user with the given login is system user, e.g. anonymous or jmx user
+     * Checks whether removing of users with the given logins is allowed
      *
-     * @param userLogin user login
-     * @return true if user is system user or false otherwise
+     * @param userLogins user logins
+     * @return true if removing is allowed or false otherwise
      */
-    boolean isSystemUser(String userLogin);
+    boolean isUsersRemovingAllowed(Collection<String> userLogins);
 }
