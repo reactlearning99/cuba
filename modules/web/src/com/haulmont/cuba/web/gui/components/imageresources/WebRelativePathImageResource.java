@@ -18,25 +18,24 @@ package com.haulmont.cuba.web.gui.components.imageresources;
 
 import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.gui.components.Image;
+import com.haulmont.cuba.web.controllers.ControllerUtils;
 import com.haulmont.cuba.web.gui.components.WebImage;
-import com.vaadin.server.StreamResource;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
+import com.vaadin.server.ExternalResource;
 
-import java.io.InputStream;
-import java.util.function.Supplier;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-public class WebStreamImageResource extends WebImage.WebAbstractStreamSettingsImageResource implements WebImageResource, Image.StreamImageResource {
+public class WebRelativePathImageResource extends WebImage.WebAbstractStreamSettingsImageResource implements WebImageResource, Image.RelativePathImageResource {
 
-    protected Supplier<InputStream> streamSupplier;
+    protected String path;
 
     protected String mimeType = null;
 
     @Override
-    public Image.StreamImageResource setStreamSupplier(Supplier<InputStream> streamSupplier) {
-        Preconditions.checkNotNullArgument(streamSupplier);
+    public Image.RelativePathImageResource setPath(String path) {
+        Preconditions.checkNotNullArgument(path);
 
-        this.streamSupplier = streamSupplier;
+        this.path = path;
         hasSource = true;
 
         fireResourceUpdateEvent();
@@ -45,22 +44,18 @@ public class WebStreamImageResource extends WebImage.WebAbstractStreamSettingsIm
     }
 
     @Override
-    public Supplier<InputStream> getStreamSupplier() {
-        return streamSupplier;
+    public String getPath() {
+        return path;
     }
 
     @Override
     protected void createResource() {
-        String name = StringUtils.isNotEmpty(fileName) ? fileName : RandomStringUtils.random(16, true, true);
-
-        resource = new StreamResource(() ->
-                streamSupplier.get(), name);
-
-        StreamResource streamResource = (StreamResource) this.resource;
-
-        streamResource.setCacheTime(cacheTime);
-        streamResource.setBufferSize(bufferSize);
-        streamResource.setMIMEType(mimeType);
+        try {
+            URL context = new URL(ControllerUtils.getLocationWithoutParams());
+            resource = new ExternalResource(new URL(context, path));
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Can't create RelativePathImageResource", e);
+        }
     }
 
     @Override
@@ -68,7 +63,7 @@ public class WebStreamImageResource extends WebImage.WebAbstractStreamSettingsIm
         this.mimeType = mimeType;
 
         if (resource != null) {
-            ((StreamResource) resource).setMIMEType(mimeType);
+            ((ExternalResource) resource).setMIMEType(mimeType);
         }
     }
 
