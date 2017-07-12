@@ -30,7 +30,7 @@ public class WebStreamImageResource extends WebImage.WebAbstractStreamSettingsIm
 
     protected Supplier<InputStream> streamSupplier;
 
-    protected String mimeType = null;
+    protected String mimeType;
 
     @Override
     public Image.StreamImageResource setStreamSupplier(Supplier<InputStream> streamSupplier) {

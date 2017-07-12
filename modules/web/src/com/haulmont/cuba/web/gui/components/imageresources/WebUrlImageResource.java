@@ -27,7 +27,7 @@ public class WebUrlImageResource extends WebImage.WebAbstractImageResource imple
 
     protected URL url;
 
-    protected String mimeType = null;
+    protected String mimeType;
 
     @Override
     public Image.UrlImageResource setUrl(URL url) {

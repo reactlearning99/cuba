@@ -34,7 +34,8 @@ public class WebFileDescriptorImageResource extends WebImage.WebAbstractStreamSe
             "An error occurred while finding file in file storage";
 
     protected FileDescriptor fileDescriptor;
-    protected String mimeType = null;
+
+    protected String mimeType;
 
     @Override
     public Image.FileDescriptorImageResource setFileDescriptor(FileDescriptor fileDescriptor) {

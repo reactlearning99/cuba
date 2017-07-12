@@ -294,8 +294,8 @@ public class WebImage extends WebAbstractComponent<CubaImage> implements Image {
 
     public abstract static class WebAbstractStreamSettingsImageResource extends WebAbstractImageResource implements HasStreamSettings {
         protected long cacheTime = DownloadStream.DEFAULT_CACHETIME;
-        protected int bufferSize = 0;
-        protected String fileName = null;
+        protected int bufferSize;
+        protected String fileName;
 
         @Override
         public void setCacheTime(long cacheTime) {

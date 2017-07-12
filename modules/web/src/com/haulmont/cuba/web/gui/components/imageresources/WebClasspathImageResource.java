@@ -29,7 +29,8 @@ public class WebClasspathImageResource extends WebImage.WebAbstractStreamSetting
         implements WebImageResource, Image.ClasspathImageResource {
 
     protected String path;
-    protected String mimeType = null;
+
+    protected String mimeType;
 
     @Override
     public Image.ClasspathImageResource setPath(String path) {

@@ -29,7 +29,7 @@ public class WebRelativePathImageResource extends WebImage.WebAbstractStreamSett
 
     protected String path;
 
-    protected String mimeType = null;
+    protected String mimeType;
 
     @Override
     public Image.RelativePathImageResource setPath(String path) {

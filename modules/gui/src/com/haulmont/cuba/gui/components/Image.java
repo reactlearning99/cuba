@@ -216,7 +216,9 @@ public interface Image extends Component, Component.HasCaption {
 
     /**
      * A resource that represents an image located in classpath with the given <code>path</code>.
-     *
+     * <p>
+     * For obtaining resources the {@link com.haulmont.cuba.core.global.Resources} infrastructure interface is using.
+     * <p>
      * For example if your image is located in the web module and has the following path: "com/company/app/web/images/image.png",
      * ClassPathImageResource's path should be: "/com/company/app/web/images/image.png"
      */
