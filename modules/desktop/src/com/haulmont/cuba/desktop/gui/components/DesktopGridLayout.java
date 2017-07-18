@@ -25,6 +25,7 @@ import com.haulmont.cuba.gui.ComponentsHelper;
 import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.Frame;
 import com.haulmont.cuba.gui.components.GridLayout;
+import com.haulmont.cuba.gui.components.MarginInfo;
 import net.miginfocom.layout.CC;
 
 import javax.annotation.Nonnull;
@@ -306,8 +307,13 @@ public class DesktopGridLayout extends DesktopAbstractComponent<JPanel> implemen
     }
 
     @Override
-    public boolean hasMargin() {
-        return layoutAdapter.hasMargin();
+    public void setMargin(MarginInfo marginInfo) {
+        layoutAdapter.setMargin(marginInfo);
+    }
+
+    @Override
+    public MarginInfo getMargin() {
+        return layoutAdapter.getMargin();
     }
 
     @Override
@@ -316,33 +322,13 @@ public class DesktopGridLayout extends DesktopAbstractComponent<JPanel> implemen
     }
 
     @Override
-    public boolean hasTopMargin() {
-        return layoutAdapter.hasTopMargin();
-    }
-
-    @Override
-    public boolean hasRightMargin() {
-        return layoutAdapter.hasRightMargin();
-    }
-
-    @Override
-    public boolean hasBottomMargin() {
-        return layoutAdapter.hasBottomMargin();
-    }
-
-    @Override
-    public boolean hasLeftMargin() {
-        return layoutAdapter.hasLeftMargin();
-    }
-
-    @Override
     public void setSpacing(boolean enabled) {
         layoutAdapter.setSpacing(enabled);
     }
 
     @Override
-    public boolean hasSpacing() {
-        return layoutAdapter.hasSpacing();
+    public boolean getSpacing() {
+        return layoutAdapter.getSpacing();
     }
 
     @Override

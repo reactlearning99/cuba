@@ -236,7 +236,7 @@ public class WebWindow implements Window, Component.Wrapper,
     }
 
     @Override
-    public boolean hasSpacing() {
+    public boolean getSpacing() {
         if (getContainer() instanceof Layout.SpacingHandler) {
             return ((Layout.SpacingHandler) getContainer()).isSpacing();
         }
@@ -251,14 +251,6 @@ public class WebWindow implements Window, Component.Wrapper,
     }
 
     @Override
-    public boolean hasMargin() {
-        if (getContainer() instanceof Layout.MarginHandler) {
-            return ((Layout.MarginHandler) getContainer()).getMargin().hasAll();
-        }
-        return false;
-    }
-
-    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         if (getContainer() instanceof Layout.MarginHandler) {
             ((Layout.MarginHandler) getContainer()).setMargin(new MarginInfo(topEnable, rightEnable, bottomEnable, leftEnable));
@@ -266,35 +258,21 @@ public class WebWindow implements Window, Component.Wrapper,
     }
 
     @Override
-    public boolean hasTopMargin() {
+    public void setMargin(com.haulmont.cuba.gui.components.MarginInfo marginInfo) {
         if (getContainer() instanceof Layout.MarginHandler) {
-            return ((Layout.MarginHandler) getContainer()).getMargin().hasTop();
+            MarginInfo vMargin = new MarginInfo(marginInfo.hasTop(), marginInfo.hasRight(), marginInfo.hasBottom(),
+                    marginInfo.hasLeft());
+            ((Layout.MarginHandler) getContainer()).setMargin(vMargin);
         }
-        return false;
     }
 
     @Override
-    public boolean hasRightMargin() {
+    public com.haulmont.cuba.gui.components.MarginInfo getMargin() {
         if (getContainer() instanceof Layout.MarginHandler) {
-            return ((Layout.MarginHandler) getContainer()).getMargin().hasRight();
+            MarginInfo vMargin = ((Layout.MarginHandler) getContainer()).getMargin();
+            return new com.haulmont.cuba.gui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(), vMargin.hasLeft());
         }
-        return false;
-    }
-
-    @Override
-    public boolean hasBottomMargin() {
-        if (getContainer() instanceof Layout.MarginHandler) {
-            return ((Layout.MarginHandler) getContainer()).getMargin().hasBottom();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean hasLeftMargin() {
-        if (getContainer() instanceof Layout.MarginHandler) {
-            return ((Layout.MarginHandler) getContainer()).getMargin().hasLeft();
-        }
-        return false;
+        return new com.haulmont.cuba.gui.components.MarginInfo(false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -216,33 +216,22 @@ public class WebGridLayout extends WebAbstractComponent<CubaGridLayout> implemen
     }
 
     @Override
-    public boolean hasMargin() {
-        return component.getMargin().hasAll();
-    }
-
-    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         component.setMargin(new MarginInfo(topEnable, rightEnable, bottomEnable, leftEnable));
     }
 
     @Override
-    public boolean hasTopMargin() {
-        return component.getMargin().hasTop();
+    public void setMargin(com.haulmont.cuba.gui.components.MarginInfo marginInfo) {
+        MarginInfo vMargin = new MarginInfo(marginInfo.hasTop(), marginInfo.hasRight(), marginInfo.hasBottom(),
+                marginInfo.hasLeft());
+        component.setMargin(vMargin);
     }
 
     @Override
-    public boolean hasRightMargin() {
-        return component.getMargin().hasRight();
-    }
-
-    @Override
-    public boolean hasBottomMargin() {
-        return component.getMargin().hasBottom();
-    }
-
-    @Override
-    public boolean hasLeftMargin() {
-        return component.getMargin().hasLeft();
+    public com.haulmont.cuba.gui.components.MarginInfo getMargin() {
+        MarginInfo vMargin = component.getMargin();
+        return new com.haulmont.cuba.gui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
+                vMargin.hasLeft());
     }
 
     @Override
@@ -251,7 +240,7 @@ public class WebGridLayout extends WebAbstractComponent<CubaGridLayout> implemen
     }
 
     @Override
-    public boolean hasSpacing() {
+    public boolean getSpacing() {
         return component.isSpacing();
     }
 

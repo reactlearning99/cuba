@@ -278,33 +278,22 @@ public class WebScrollBoxLayout extends WebAbstractComponent<CubaScrollBoxLayout
     }
 
     @Override
-    public boolean hasMargin() {
-        return getContent().getMargin().hasAll();
-    }
-
-    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         getContent().setMargin(new MarginInfo(topEnable, rightEnable, bottomEnable, leftEnable));
     }
 
     @Override
-    public boolean hasTopMargin() {
-        return getContent().getMargin().hasTop();
+    public void setMargin(com.haulmont.cuba.gui.components.MarginInfo marginInfo) {
+        MarginInfo vMargin = new MarginInfo(marginInfo.hasTop(), marginInfo.hasRight(), marginInfo.hasBottom(),
+                marginInfo.hasLeft());
+        component.setMargin(vMargin);
     }
 
     @Override
-    public boolean hasRightMargin() {
-        return getContent().getMargin().hasRight();
-    }
-
-    @Override
-    public boolean hasBottomMargin() {
-        return getContent().getMargin().hasBottom();
-    }
-
-    @Override
-    public boolean hasLeftMargin() {
-        return getContent().getMargin().hasLeft();
+    public com.haulmont.cuba.gui.components.MarginInfo getMargin() {
+        MarginInfo vMargin = getContent().getMargin();
+        return new com.haulmont.cuba.gui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
+                vMargin.hasLeft());
     }
 
     @Override
@@ -313,7 +302,7 @@ public class WebScrollBoxLayout extends WebAbstractComponent<CubaScrollBoxLayout
     }
 
     @Override
-    public boolean hasSpacing() {
+    public boolean getSpacing() {
         return getContent().isSpacing();
     }
 
