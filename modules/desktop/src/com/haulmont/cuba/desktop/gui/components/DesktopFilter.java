@@ -194,10 +194,40 @@ public class DesktopFilter extends DesktopAbstractComponent<JPanel> implements F
 //        component.setMargin(enable);
     }
 
+    // just stub
+    @Override
+    public boolean hasMargin() {
+        return false;
+    }
+
     @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         //todo gorbunkov
 //        component.setMargin(new MarginInfo(topEnable, rightEnable, bottomEnable, leftEnable));
+    }
+
+    // just stub
+    @Override
+    public boolean hasTopMargin() {
+        return false;
+    }
+
+    // just stub
+    @Override
+    public boolean hasRightMargin() {
+        return false;
+    }
+
+    // just stub
+    @Override
+    public boolean hasBottomMargin() {
+        return false;
+    }
+
+    // just stub
+    @Override
+    public boolean hasLeftMargin() {
+        return false;
     }
 
     @Override

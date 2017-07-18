@@ -278,13 +278,43 @@ public class WebScrollBoxLayout extends WebAbstractComponent<CubaScrollBoxLayout
     }
 
     @Override
+    public boolean hasMargin() {
+        return getContent().getMargin().hasAll();
+    }
+
+    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         getContent().setMargin(new MarginInfo(topEnable, rightEnable, bottomEnable, leftEnable));
     }
 
     @Override
+    public boolean hasTopMargin() {
+        return getContent().getMargin().hasTop();
+    }
+
+    @Override
+    public boolean hasRightMargin() {
+        return getContent().getMargin().hasRight();
+    }
+
+    @Override
+    public boolean hasBottomMargin() {
+        return getContent().getMargin().hasBottom();
+    }
+
+    @Override
+    public boolean hasLeftMargin() {
+        return getContent().getMargin().hasLeft();
+    }
+
+    @Override
     public void setSpacing(boolean enabled) {
         getContent().setSpacing(enabled);
+    }
+
+    @Override
+    public boolean hasSpacing() {
+        return getContent().isSpacing();
     }
 
     @Override

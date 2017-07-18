@@ -47,6 +47,11 @@ public abstract class LayoutAdapter
     }
 
     @Override
+    public boolean hasMargin() {
+        return margins[0] & margins[1] & margins[2] & margins[3];
+    }
+
+    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         margins[0] = topEnable;
         margins[1] = rightEnable;
@@ -56,9 +61,34 @@ public abstract class LayoutAdapter
     }
 
     @Override
+    public boolean hasTopMargin() {
+        return margins[0];
+    }
+
+    @Override
+    public boolean hasRightMargin() {
+        return margins[1];
+    }
+
+    @Override
+    public boolean hasBottomMargin() {
+        return margins[2];
+    }
+
+    @Override
+    public boolean hasLeftMargin() {
+        return margins[3];
+    }
+
+    @Override
     public void setSpacing(boolean enabled) {
         spacing = enabled;
         update();
+    }
+
+    @Override
+    public boolean hasSpacing() {
+        return spacing;
     }
 
     /*

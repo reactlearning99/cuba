@@ -838,11 +838,29 @@ public interface Component {
 
     interface Spacing {
         void setSpacing(boolean enabled);
+        boolean hasSpacing();
     }
 
     interface Margin {
+        /**
+         * Enables or disables all margins
+         */
         void setMargin(boolean enable);
+
+        /**
+         * @return true if all margins are enabled
+         */
+        boolean hasMargin();
+
+        /**
+         * Enables or disables margins depends on the given params
+         */
         void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable);
+
+        boolean hasTopMargin();
+        boolean hasRightMargin();
+        boolean hasBottomMargin();
+        boolean hasLeftMargin();
     }
 
     interface HasInputPrompt {

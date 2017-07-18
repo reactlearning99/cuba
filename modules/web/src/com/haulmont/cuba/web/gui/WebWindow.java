@@ -236,6 +236,14 @@ public class WebWindow implements Window, Component.Wrapper,
     }
 
     @Override
+    public boolean hasSpacing() {
+        if (getContainer() instanceof Layout.SpacingHandler) {
+            return ((Layout.SpacingHandler) getContainer()).isSpacing();
+        }
+        return false;
+    }
+
+    @Override
     public void setMargin(boolean enable) {
         if (getContainer() instanceof Layout.MarginHandler) {
             ((Layout.MarginHandler) getContainer()).setMargin(new MarginInfo(enable));
@@ -243,10 +251,50 @@ public class WebWindow implements Window, Component.Wrapper,
     }
 
     @Override
+    public boolean hasMargin() {
+        if (getContainer() instanceof Layout.MarginHandler) {
+            return ((Layout.MarginHandler) getContainer()).getMargin().hasAll();
+        }
+        return false;
+    }
+
+    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         if (getContainer() instanceof Layout.MarginHandler) {
             ((Layout.MarginHandler) getContainer()).setMargin(new MarginInfo(topEnable, rightEnable, bottomEnable, leftEnable));
         }
+    }
+
+    @Override
+    public boolean hasTopMargin() {
+        if (getContainer() instanceof Layout.MarginHandler) {
+            return ((Layout.MarginHandler) getContainer()).getMargin().hasTop();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasRightMargin() {
+        if (getContainer() instanceof Layout.MarginHandler) {
+            return ((Layout.MarginHandler) getContainer()).getMargin().hasRight();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasBottomMargin() {
+        if (getContainer() instanceof Layout.MarginHandler) {
+            return ((Layout.MarginHandler) getContainer()).getMargin().hasBottom();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasLeftMargin() {
+        if (getContainer() instanceof Layout.MarginHandler) {
+            return ((Layout.MarginHandler) getContainer()).getMargin().hasLeft();
+        }
+        return false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

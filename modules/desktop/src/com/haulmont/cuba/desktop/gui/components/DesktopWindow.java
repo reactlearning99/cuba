@@ -1233,13 +1233,43 @@ public class DesktopWindow implements Window, Component.Disposable,
     }
 
     @Override
+    public boolean hasMargin() {
+        return layoutAdapter.hasMargin();
+    }
+
+    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         layoutAdapter.setMargin(topEnable, rightEnable, bottomEnable, leftEnable);
     }
 
     @Override
+    public boolean hasTopMargin() {
+        return layoutAdapter.hasTopMargin();
+    }
+
+    @Override
+    public boolean hasRightMargin() {
+        return layoutAdapter.hasRightMargin();
+    }
+
+    @Override
+    public boolean hasBottomMargin() {
+        return layoutAdapter.hasBottomMargin();
+    }
+
+    @Override
+    public boolean hasLeftMargin() {
+        return layoutAdapter.hasLeftMargin();
+    }
+
+    @Override
     public void setSpacing(boolean enabled) {
         layoutAdapter.setSpacing(enabled);
+    }
+
+    @Override
+    public boolean hasSpacing() {
+        return layoutAdapter.hasSpacing();
     }
 
     @Override

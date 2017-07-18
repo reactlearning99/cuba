@@ -625,13 +625,43 @@ public class AbstractFrame implements Frame, Frame.Wrapper, Component.Wrapper, C
     }
 
     @Override
+    public boolean hasSpacing() {
+        return frame.hasSpacing();
+    }
+
+    @Override
     public void setMargin(boolean enable) {
         frame.setMargin(enable);
     }
 
     @Override
+    public boolean hasMargin() {
+        return frame.hasMargin();
+    }
+
+    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         frame.setMargin(topEnable, rightEnable, bottomEnable, leftEnable);
+    }
+
+    @Override
+    public boolean hasTopMargin() {
+        return frame.hasTopMargin();
+    }
+
+    @Override
+    public boolean hasRightMargin() {
+        return frame.hasRightMargin();
+    }
+
+    @Override
+    public boolean hasBottomMargin() {
+        return frame.hasBottomMargin();
+    }
+
+    @Override
+    public boolean hasLeftMargin() {
+        return frame.hasLeftMargin();
     }
 
     @Override

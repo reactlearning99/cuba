@@ -326,13 +326,43 @@ public class DesktopScrollBoxLayout extends DesktopAbstractComponent<JScrollPane
     }
 
     @Override
+    public boolean hasMargin() {
+        return content.hasMargin();
+    }
+
+    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         content.setMargin(topEnable, rightEnable, bottomEnable, leftEnable);
     }
 
     @Override
+    public boolean hasTopMargin() {
+        return content.hasTopMargin();
+    }
+
+    @Override
+    public boolean hasRightMargin() {
+        return content.hasRightMargin();
+    }
+
+    @Override
+    public boolean hasBottomMargin() {
+        return content.hasBottomMargin();
+    }
+
+    @Override
+    public boolean hasLeftMargin() {
+        return content.hasLeftMargin();
+    }
+
+    @Override
     public void setSpacing(boolean enabled) {
         content.setSpacing(enabled);
+    }
+
+    @Override
+    public boolean hasSpacing() {
+        return content.hasSpacing();
     }
 
     @Override

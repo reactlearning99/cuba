@@ -47,12 +47,42 @@ public class WebFlowBoxLayout extends WebAbstractOrderedLayout<CubaFlowLayout> i
     }
 
     @Override
+    public boolean hasMargin() {
+        return component.getMargin().hasAll();
+    }
+
+    @Override
     public void setMargin(boolean topEnable, boolean rightEnable, boolean bottomEnable, boolean leftEnable) {
         component.setMargin(new MarginInfo(topEnable, rightEnable, bottomEnable, leftEnable));
     }
 
     @Override
+    public boolean hasTopMargin() {
+        return component.getMargin().hasTop();
+    }
+
+    @Override
+    public boolean hasRightMargin() {
+        return component.getMargin().hasRight();
+    }
+
+    @Override
+    public boolean hasBottomMargin() {
+        return component.getMargin().hasBottom();
+    }
+
+    @Override
+    public boolean hasLeftMargin() {
+        return component.getMargin().hasLeft();
+    }
+
+    @Override
     public void setSpacing(boolean enabled) {
         component.setSpacing(enabled);
+    }
+
+    @Override
+    public boolean hasSpacing() {
+        return component.isSpacing();
     }
 }
