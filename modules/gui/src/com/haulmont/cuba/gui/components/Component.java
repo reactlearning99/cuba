@@ -836,11 +836,17 @@ public interface Component {
         Object getDefaultPresentationId();
     }
 
+    /**
+     * A class that implements this interface can have space between child components.
+     */
     interface Spacing {
         void setSpacing(boolean enabled);
         boolean getSpacing();
     }
 
+    /**
+     * A class that implements this interface can have indentation between the outer borders and the container content.
+     */
     interface Margin {
         void setMargin(boolean enable);
 
